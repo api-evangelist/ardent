@@ -1,0 +1,39 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/ardent-openapi-original.json
+docs: https://docs.tryardent.com/api/authentication
+summary:
+  types:
+  - http
+  api_key_in:
+  - header
+  key_prefixes:
+  - sk-ard_live_
+  - sk-ard_test_
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: >-
+    Ardent API key or a dashboard session token, sent as an Authorization: Bearer header.
+    API keys are minted in the dashboard (Settings > API keys) or via the API-keys endpoints,
+    and carry the prefix sk-ard_live_ (production) or sk-ard_test_ (test).
+  in: header
+  header: Authorization
+  sources:
+  - openapi/ardent-openapi-original.json
+# Role-based access control (assigned per API key / member, not OAuth scopes)
+roles:
+- id: role_org_viewer
+  description: Read-only access for automation and reporting.
+- id: role_org_member
+  description: Create and modify resources such as branches and connectors.
+- id: role_org_admin
+  description: Team and API-key management.
+- id: role_org_owner
+  description: Complete organization control.
+roles_source: https://docs.tryardent.com/api/authentication
+roles_endpoint: GET /v1/orgs/{org_id}/roles
+notes: >-
+  No OAuth 2.0 / OIDC flows are declared; access is bearer-key based with server-side RBAC roles,
+  so there is no OAuth scope surface (scopes/ intentionally omitted).
