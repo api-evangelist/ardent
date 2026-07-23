@@ -1,0 +1,28 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.tryardent.com/api/authentication
+summary: >-
+  Ardent separates test and live access at the API-key level via key prefixes. It does not publish
+  magic test identifiers or fixture data (the product itself provisions isolated, disposable branch
+  databases, which act as the throwaway test environment). No hosted test cards/tokens apply — this
+  is not a payments API.
+test_live_separation:
+  mechanism: api-key-prefix
+  live_prefix: sk-ard_live_
+  test_prefix: sk-ard_test_
+  header: "Authorization: Bearer <key>"
+  docs: https://docs.tryardent.com/api/authentication
+disposable_environments:
+  description: >-
+    Every database branch is a fully isolated, disposable copy of the source Postgres database,
+    scaled to zero when idle. Branches are the intended safe sandbox for migrations, backfills,
+    destructive tests, and agent experiments; deleting the branch tears the environment down.
+  create: POST /v1/branch/create
+  connect: GET /v1/branches/{connector_id}
+  cli: ardent branch create <name> --print-url
+free_credit:
+  starter_one_time_credit_usd: 30
+  source: https://www.tryardent.com/pricing
+notes: >-
+  No published static test database URLs or example credentials; the quickstart uses a placeholder
+  ARDENT_DB_URL that the user supplies. Never fabricate test values.

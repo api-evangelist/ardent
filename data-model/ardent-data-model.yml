@@ -1,0 +1,74 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ardent-openapi-original.json
+docs: https://docs.tryardent.com/api/overview
+entities:
+- name: Organization
+  id_field: org_id
+  path: /v1/orgs/{org_id}
+  schemas: [UpdateOrgRequest]
+- name: Project
+  id_field: project_id
+  path: /v1/projects/{project_id}
+  schemas: [ProjectRow, ProjectListResponse, CreateProjectRequest, UpdateProjectRequest]
+- name: Connector
+  id_field: connector_id
+  path: /v1/connectors/{connector_id}
+  schemas: [ConnectorRow, ConnectorEnvelope, ConnectorListResponse, CreateConnectorRequest, UpdateConnectorRequest, PreflightConnectorRequest, PreflightReport]
+- name: Branch
+  path: /v1/branches/{connector_id}
+  schemas: [BranchRow]
+- name: Quarantine
+  id_field: quarantine_id
+  path: /v1/connectors/{connector_id}/quarantine
+  schemas: [QuarantineRow, QuarantineListResponse]
+- name: Operation
+  id_field: operation_id
+  path: /v1/operations/{operation_id}
+  schemas: [OperationHandle, OperationStatus, OperationType, AsyncOperationResponse]
+- name: APIKey
+  id_field: api_key_id
+  path: /v1/orgs/{org_id}/api-keys/{api_key_id}
+  schemas: [APIKeyListItem, APIKeyCreateResponse, CreateAPIKeyRequest]
+- name: Member
+  id_field: target_user_id
+  path: /v1/orgs/{org_id}/members/{target_user_id}
+  schemas: [UpdateMemberRoleRequest]
+- name: Invite
+  id_field: invite_id
+  path: /v1/orgs/{org_id}/invites/{invite_id}
+  schemas: [InviteUserRequest]
+relationships:
+- from: Organization
+  to: Project
+  type: has_many
+  via: org_id
+- from: Organization
+  to: APIKey
+  type: has_many
+  via: org_id
+- from: Organization
+  to: Member
+  type: has_many
+  via: org_id
+- from: Organization
+  to: Invite
+  type: has_many
+  via: org_id
+- from: Project
+  to: Connector
+  type: has_many
+  via: project_id
+- from: Connector
+  to: Branch
+  type: has_many
+  via: connector_id
+- from: Connector
+  to: Quarantine
+  type: has_many
+  via: connector_id
+- from: Branch
+  to: Operation
+  type: belongs_to
+  via: operation_id
+  note: async branch create/delete return an Operation handle to poll

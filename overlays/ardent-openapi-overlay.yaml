@@ -1,0 +1,23 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Ardent API
+  version: 1.0.0
+extends: openapi/ardent-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: ardent
+    x-apievangelist-category: database-branching
+    x-apievangelist-auth: bearer-api-key
+    x-apievangelist-async-pattern: operation-handle-polling
+    x-apievangelist-error-envelope: detail-string
+    x-apievangelist-idempotency: none-documented
+    x-apievangelist-pagination: none-documented
+- target: $.info
+  update:
+    x-apievangelist-links:
+      documentation: https://docs.tryardent.com
+      api_reference: https://docs.tryardent.com/api/overview
+      getting_started: https://docs.tryardent.com/quickstart
+      cli: https://www.npmjs.com/package/ardent-cli
+      pricing: https://www.tryardent.com/pricing

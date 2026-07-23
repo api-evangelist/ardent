@@ -1,0 +1,23 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/ardent-openapi-original.json
+skills:
+- file: ardent-connect-and-branch.md
+  name: Connect a Postgres source and create a branch
+  api: openapi/ardent-openapi-original.json
+  operations:
+  - preflight_connector_endpoint_v1_connectors_preflight_post
+  - create_connector_endpoint_v1_connectors_post
+  - discover_connector_endpoint_v1_connectors__connector_id__discover_post
+  - set_selection_endpoint_v1_connectors__connector_id__selection_post
+  - get_operation_endpoint_v1_operations__operation_id__get
+  - create_service_branch_v1_branch_create_post
+  - get_branches_v1_branches__connector_id__get
+- file: ardent-agent-ephemeral-database.md
+  name: Give an AI agent an isolated ephemeral database
+  api: openapi/ardent-openapi-original.json
+  operations:
+  - list_connectors_endpoint_v1_connectors_get
+  - create_service_branch_v1_branch_create_post
+  - get_operation_endpoint_v1_operations__operation_id__get
+  - get_branches_v1_branches__connector_id__get

@@ -1,0 +1,53 @@
+generated: '2026-07-18'
+method: derived
+status: candidate
+source: openapi/ardent-openapi-original.json
+summary: >-
+  No official hosted/remote Ardent MCP server was found (docs, npm @modelcontextprotocol, MCP
+  registries). This is a candidate tool surface derived one-to-one from the 35 REST operations so an
+  agent server can be scaffolded; Ardent's workflows/ai-agents guide targets agents via the CLI/API.
+server:
+  name: ardent
+  transport: http
+  base: https://api.tryardent.com
+  auth: bearer (sk-ard_live_ / sk-ard_test_)
+tools:
+- name: preflight_connector
+  description: Check a Postgres source before connecting it (creates nothing).
+  source_operation: openapi/ardent-openapi-original.json#preflight_connector_endpoint_v1_connectors_preflight_post
+- name: create_connector
+  description: Connect a Postgres source to Ardent.
+  source_operation: openapi/ardent-openapi-original.json#create_connector_endpoint_v1_connectors_post
+- name: list_connectors
+  description: List an organization's connectors.
+  source_operation: openapi/ardent-openapi-original.json#list_connectors_endpoint_v1_connectors_get
+- name: get_connector
+  description: Inspect a connector's status and readiness.
+  source_operation: openapi/ardent-openapi-original.json#get_connector_endpoint_v1_connectors__connector_id__get
+- name: discover_connector
+  description: Start async schema discovery on a connector.
+  source_operation: openapi/ardent-openapi-original.json#discover_connector_endpoint_v1_connectors__connector_id__discover_post
+- name: set_connector_selection
+  description: Set which discovered schemas/tables the connector replicates.
+  source_operation: openapi/ardent-openapi-original.json#set_selection_endpoint_v1_connectors__connector_id__selection_post
+- name: create_branch
+  description: Start an async branch create and get an operation handle.
+  source_operation: openapi/ardent-openapi-original.json#create_service_branch_v1_branch_create_post
+- name: list_branches
+  description: List a connector's branches with their connection URLs.
+  source_operation: openapi/ardent-openapi-original.json#get_branches_v1_branches__connector_id__get
+- name: get_operation
+  description: Poll a long-running Ardent operation to completion.
+  source_operation: openapi/ardent-openapi-original.json#get_operation_endpoint_v1_operations__operation_id__get
+- name: list_projects
+  description: List projects visible to the token.
+  source_operation: openapi/ardent-openapi-original.json#list_projects_endpoint_v1_projects_get
+- name: create_project
+  description: Create a project in an organization.
+  source_operation: openapi/ardent-openapi-original.json#create_project_endpoint_v1_projects_post
+- name: create_api_key
+  description: Create an organization API key with a role and optional scopes.
+  source_operation: openapi/ardent-openapi-original.json#create_new_api_key_v1_orgs__org_id__api_keys_post
+notes: >-
+  Candidate list is a representative subset across the connector/branch/operation/project/api-key
+  surfaces; the full 35-operation spec at openapi/ardent-openapi-original.json is the source of truth.

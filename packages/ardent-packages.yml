@@ -1,0 +1,19 @@
+generated: '2026-07-18'
+method: searched
+source: https://www.npmjs.com/package/ardent-cli
+packages:
+- language: javascript
+  registry: npm
+  name: ardent-cli
+  url: https://www.npmjs.com/package/ardent-cli
+  install: npm install -g ardent-cli
+  version: 0.0.96
+  bin: ardent
+  description: Git for Data infrastructure — the official Ardent command-line interface.
+  requires: Node.js 18+
+  official: true
+notes: >-
+  ardent-cli is the first-party CLI (binary `ardent`); its command surface is catalogued in
+  cli/ardent-cli.yml. Ardent ships no first-party language client library (SDK) — the REST API is
+  consumed directly with bearer API keys — so no SDKs pointer is emitted. The unrelated npm package
+  `ardent` (v0.0.1) is a legacy placeholder and is not the current CLI.

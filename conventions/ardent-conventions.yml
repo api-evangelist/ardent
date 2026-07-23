@@ -1,0 +1,51 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.tryardent.com/api/overview
+sources:
+- https://docs.tryardent.com/api/overview
+- https://docs.tryardent.com/api/errors
+- https://docs.tryardent.com/api/authentication
+- https://docs.tryardent.com/api/operations
+- openapi/ardent-openapi-original.json
+authentication:
+  style: bearer
+  header: Authorization
+  scheme: Bearer
+  credential: API key (sk-ard_live_ / sk-ard_test_) or dashboard session token
+  see: authentication/ardent-authentication.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  base: https://api.tryardent.com/v1
+  forward_compat: "JSON responses may add new fields; clients should read only the fields they need."
+async_operations:
+  pattern: operation-handle
+  description: >-
+    Long-running work (branch create, connector delete, schema discovery, engine setup) returns an
+    async operation handle (202 Accepted) that the caller polls to completion.
+  poll: GET /v1/operations/{operation_id}
+  terminal_states: [succeeded, failed]
+  failure_fields: [status, stage, error]
+  see: https://docs.tryardent.com/api/operations
+idempotency:
+  supported: false
+  notes: >-
+    No idempotency-key header/parameter is documented in the OpenAPI or docs. Creates are async and
+    return operation handles; retries should key off the returned operation rather than a client key.
+pagination:
+  supported: false
+  notes: List endpoints (connectors, branches, projects, members, invites, roles, quarantines)
+    return full collections; no cursor/offset pagination parameters are documented.
+error_envelope:
+  format: detail-string
+  shape: '{"detail": "human-readable message"}'
+  problem_json: false
+  validation: 422 responses include structured field-level validation details (HTTPValidationError)
+  see: errors/ardent-problem-types.yml
+request_tracing:
+  request_id_header: null
+  notes: No request-id / correlation header is documented.
+rate_limit_signaling:
+  status_code: 429
+  retry: "Retry with backoff on 429 and 5xx (500/502/503); do not retry 4xx client errors."
+  numeric_limits_published: false

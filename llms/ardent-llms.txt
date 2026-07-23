@@ -1,0 +1,63 @@
+# Ardent
+
+## Docs
+
+- [API keys API](https://docs.tryardent.com/api/api-keys.md): Create, list, and revoke organization API keys
+- [Create an API key](https://docs.tryardent.com/api/api-keys/create.md): Create an API key with a role and optional scopes
+- [Revoke an API key](https://docs.tryardent.com/api/api-keys/delete.md): Revoke an API key immediately
+- [List API keys](https://docs.tryardent.com/api/api-keys/list.md): List an organization's active API keys
+- [Authentication](https://docs.tryardent.com/api/authentication.md): Authenticate API requests with bearer tokens and manage access safely
+- [Branches API](https://docs.tryardent.com/api/branches.md): Create and list isolated database branches
+- [Create a branch](https://docs.tryardent.com/api/branches/create.md): Start an async branch create and get an operation handle
+- [List branches](https://docs.tryardent.com/api/branches/list.md): List a connector's branches with their connection URLs
+- [Connectors API](https://docs.tryardent.com/api/connectors.md): Preflight, create, inspect, and update Postgres connectors
+- [Create a connector](https://docs.tryardent.com/api/connectors/create.md): Connect a Postgres source to Ardent
+- [Delete a connector](https://docs.tryardent.com/api/connectors/delete.md): Start an async connector delete
+- [Discover schema](https://docs.tryardent.com/api/connectors/discover.md): Start async schema discovery on a connector
+- [Start setup](https://docs.tryardent.com/api/connectors/engine-setup.md): Start async connector setup
+- [Get a connector](https://docs.tryardent.com/api/connectors/get.md): Inspect a connector's status and readiness
+- [List connectors](https://docs.tryardent.com/api/connectors/list.md): List an organization's connectors
+- [Lock deletion](https://docs.tryardent.com/api/connectors/lock.md): Protect a connector from deletion
+- [Preflight a source](https://docs.tryardent.com/api/connectors/preflight.md): Check a database before connecting it — creates nothing
+- [List quarantines](https://docs.tryardent.com/api/connectors/quarantine-list.md): List a connector's paused replication deployments
+- [Release a quarantine](https://docs.tryardent.com/api/connectors/quarantine-release.md): Resume a paused replication deployment
+- [Submit replica identity decisions](https://docs.tryardent.com/api/connectors/replica-identity-decisions.md): Resolve tables that need an identity decision
+- [Select tables and schemas](https://docs.tryardent.com/api/connectors/selection.md): Set which discovered paths the connector replicates
+- [Unlock deletion](https://docs.tryardent.com/api/connectors/unlock.md): Remove a connector's deletion lock
+- [Update a connector](https://docs.tryardent.com/api/connectors/update.md): Change a connector's supported settings
+- [Errors](https://docs.tryardent.com/api/errors.md): Understand API error responses and safe retry behavior
+- [Operations API](https://docs.tryardent.com/api/operations.md): Poll long-running Ardent work to completion
+- [Organizations API](https://docs.tryardent.com/api/orgs.md): Manage organizations, members, invites, and roles
+- [API overview](https://docs.tryardent.com/api/overview.md): Build on Ardent with the REST API
+- [Projects API](https://docs.tryardent.com/api/projects.md): Create, list, update, and delete Ardent projects
+- [Create a project](https://docs.tryardent.com/api/projects/create.md): Create a project in an organization
+- [Delete a project](https://docs.tryardent.com/api/projects/delete.md): Delete a project and everything under it
+- [Get a project](https://docs.tryardent.com/api/projects/get.md): Fetch one project by ID
+- [List projects](https://docs.tryardent.com/api/projects/list.md): List projects visible to the token
+- [Rename a project](https://docs.tryardent.com/api/projects/update.md): Update a project's mutable fields
+- [Architecture](https://docs.tryardent.com/architecture.md): How Ardent's split-plane architecture keeps your data safe and your branches fast
+- [Authentication](https://docs.tryardent.com/cli/auth.md): Sign in from your terminal, or use a token in CI
+- [Branches](https://docs.tryardent.com/cli/branches.md): Create isolated database branches and connect to them
+- [Configuration & automation](https://docs.tryardent.com/cli/configuration.md): Environment variables, exit codes, and JSON output for scripts, CI, and agents
+- [Connectors](https://docs.tryardent.com/cli/connectors.md): Check, connect, monitor, and manage your Postgres sources
+- [Team](https://docs.tryardent.com/cli/org.md): Invite teammates and manage your organization
+- [CLI reference](https://docs.tryardent.com/cli/overview.md): Install the Ardent CLI and learn the handful of commands you'll use every day
+- [Projects](https://docs.tryardent.com/cli/projects.md): Projects group your connectors and branches
+- [Settings](https://docs.tryardent.com/cli/settings.md): Defaults for new branches, branch setup SQL, and local Supabase linking
+- [PlanetScale](https://docs.tryardent.com/connectors/planetscale.md): The PlanetScale-specific parts of connecting to Ardent
+- [AWS RDS](https://docs.tryardent.com/connectors/rds.md): The RDS-specific parts of connecting to Ardent
+- [Self-hosted Postgres](https://docs.tryardent.com/connectors/self-hosted.md): Prepare any self-managed Postgres 13+ for Ardent
+- [Supabase](https://docs.tryardent.com/connectors/supabase.md): The Supabase-specific parts of connecting to Ardent
+- [Contact](https://docs.tryardent.com/contact.md): Get in touch with the Ardent team
+- [FAQ](https://docs.tryardent.com/faq.md): Common questions answered
+- [Ardent: Git for your data infrastructure](https://docs.tryardent.com/index.md)
+- [Quickstart](https://docs.tryardent.com/quickstart.md): Branch your Postgres database in a few minutes
+- [Security](https://docs.tryardent.com/security.md): How Ardent keeps your data safe
+- [AI agents](https://docs.tryardent.com/workflows/ai-agents.md): Give agents a real database to work against: isolated, disposable, cloned from production
+- [CI / CD](https://docs.tryardent.com/workflows/ci-cd.md): A fresh database for every PR. Isolated, production-like, torn down after merge.
+- [Local development](https://docs.tryardent.com/workflows/local-dev.md): Branch before you touch the database. Every time.
+- [Regression testing](https://docs.tryardent.com/workflows/regression-testing.md): Run destructive tests against real production data without touching production
+
+## OpenAPI Specs
+
+- [openapi.public](https://docs.tryardent.com/openapi.public.json)

@@ -1,0 +1,50 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ardent-openapi-original.json
+docs: https://docs.tryardent.com/api/errors
+format: detail-envelope
+envelope: '{"detail": "human-readable message"}'
+problem_json: false
+notes: >-
+  Derived from OpenAPI 4xx/5xx responses across 35 operations and enriched from the docs error
+  reference. Ardent does not use RFC 9457 application/problem+json; errors carry a single `detail`
+  string, and 422 validation errors add structured field-level detail (HTTPValidationError schema).
+problems:
+- status: 400
+  title: Bad request
+  meaning: Required data is missing or invalid.
+  retry: false
+- status: 401
+  title: Unauthorized
+  meaning: Missing or invalid token.
+  retry: false
+- status: 403
+  title: Forbidden
+  meaning: Token is valid but not allowed to perform the action (insufficient role).
+  retry: false
+- status: 404
+  title: Not found
+  meaning: Resource was not found in the accessible scope.
+  retry: false
+- status: 409
+  title: Conflict
+  meaning: The request conflicts with current resource state.
+  retry: usually-no
+- status: 422
+  title: Unprocessable entity
+  meaning: Request body failed validation; response includes field-level detail.
+  schema: HTTPValidationError
+  retry: false
+- status: 429
+  title: Too many requests
+  meaning: Too many requests in a short period.
+  retry: backoff
+- status: 503
+  title: Service unavailable
+  meaning: Server or dependency error.
+  retry: bounded
+async_operation_failure:
+  description: >-
+    Operations can return 202 then fail asynchronously. The operation object reports status=failed
+    with `stage` and `error` fields; fix the cause and start a new operation.
+  poll: GET /v1/operations/{operation_id}

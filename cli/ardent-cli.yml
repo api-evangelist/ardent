@@ -1,0 +1,58 @@
+generated: '2026-07-18'
+method: searched
+source: https://docs.tryardent.com/cli/overview
+name: Ardent CLI
+binary: ardent
+package: ardent-cli
+install:
+- method: npm
+  command: npm install -g ardent-cli
+  requires: Node.js 18+
+authentication:
+  interactive: ardent login   # opens a browser to authenticate
+  logout: ardent logout
+  ci_env_var: ARDENT_TOKEN     # takes precedence over stored login
+  api_url_env_var: ARDENT_API_URL   # defaults to https://api.tryardent.com
+command_groups:
+- group: auth
+  commands: [login, logout, status]
+- group: project
+  commands: [list, switch, create, delete]
+- group: connector
+  commands: [preflight, create, switch, retry-setup]
+  example: ardent connector create postgresql "$ARDENT_DB_URL"
+- group: branch
+  commands: [create, switch, info, delete]
+  example: ardent branch create my-feature
+- group: settings
+  commands: [settings]
+- group: org
+  commands: [org, invite]
+automation:
+  json_flag: "--format json"     # on branch create / branch info; stable JSON object
+  print_url_flag: "--print-url"  # output only the connection URL
+  json_schema_version: 1
+  exit_codes:
+    0: success
+    1: runtime failure (network, API error, timeout)
+    2: command error (invalid flags/values, or warnings with --fail-on-warnings)
+  error_codes:
+  - offline
+  - not_authenticated
+  - not_found
+  - no_current_project
+  - no_connectors
+  - timeout
+  - api_error
+  polling_env_vars:
+  - ARDENT_BRANCH_CREATE_MAX_WAIT_MS
+  - ARDENT_BRANCH_CREATE_POLL_INTERVAL_MS
+  - ARDENT_BRANCH_CREATE_OPERATION_WAIT_SECONDS
+  - ARDENT_BRANCH_DELETE_MAX_WAIT_MS
+  - ARDENT_BRANCH_DELETE_POLL_INTERVAL_MS
+docs:
+  overview: https://docs.tryardent.com/cli/overview
+  auth: https://docs.tryardent.com/cli/auth
+  branches: https://docs.tryardent.com/cli/branches
+  connectors: https://docs.tryardent.com/cli/connectors
+  configuration: https://docs.tryardent.com/cli/configuration

@@ -1,0 +1,24 @@
+{
+  "provider": "ardent",
+  "sources": [
+    "ardent-v1-api-keys-api-openapi.yml",
+    "ardent-v1-branching-api-openapi.yml",
+    "ardent-v1-connectors-api-openapi.yml",
+    "ardent-v1-operations-api-openapi.yml",
+    "ardent-v1-orgs-api-openapi.yml",
+    "ardent-v1-projects-api-openapi.yml"
+  ],
+  "outputs": [
+    "ardent-v1-api-keys-api-openapi.yml",
+    "ardent-v1-branching-api-openapi.yml",
+    "ardent-v1-connectors-api-openapi.yml",
+    "ardent-v1-operations-api-openapi.yml",
+    "ardent-v1-orgs-api-openapi.yml",
+    "ardent-v1-projects-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

@@ -1,8 +1,27 @@
 aid: ardent
 name: Ardent
-description: Ardent is a company surfaced as a portfolio company of y-combinator and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Ardent is a database branching platform for Postgres that lets developers and AI coding
+  agents clone any production or development database in seconds into fully isolated, disposable
+  branches. Each branch is isolated at both the compute and storage layers using copy-on-write,
+  autoscales to zero when idle, and never touches production, so agents and CI/CD pipelines can
+  run migrations, backfills, destructive tests, and risky experiments against production-like data
+  with zero blast radius. Ardent exposes a REST API (api.tryardent.com), a first-party npm CLI
+  (ardent-cli), and connectors for Supabase, AWS RDS, PlanetScale, and self-hosted Postgres 13+.
 url: https://raw.githubusercontent.com/api-evangelist/ardent/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://tryardent.com/og-image.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -11,12 +30,177 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
-apis: []
+- Database
+- PostgreSQL
+- Database Branching
+- Developer Tools
+- Sandbox
+- AI Agents
+- CI/CD
+- Data Infrastructure
+- Testing
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: ardent:ardent-v1-api-keys-api
+  name: Ardent v1-api-keys API
+  description: The v1-api-keys API from Ardent — 2 operation(s) for v1-api-keys.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-api-keys
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tryardent.com/api/overview
+  - type: APIReference
+    url: https://docs.tryardent.com/api/overview
+  - type: Authentication
+    url: https://docs.tryardent.com/api/authentication
+- aid: ardent:ardent-v1-branching-api
+  name: Ardent v1-branching API
+  description: The v1-branching API from Ardent — 2 operation(s) for v1-branching.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-branching
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-branching-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tryardent.com/api/overview
+  - type: APIReference
+    url: https://docs.tryardent.com/api/overview
+  - type: Authentication
+    url: https://docs.tryardent.com/api/authentication
+- aid: ardent:ardent-v1-connectors-api
+  name: Ardent v1-connectors API
+  description: The v1-connectors API from Ardent — 10 operation(s) for v1-connectors.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-connectors
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-connectors-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tryardent.com/api/overview
+  - type: APIReference
+    url: https://docs.tryardent.com/api/overview
+  - type: Authentication
+    url: https://docs.tryardent.com/api/authentication
+- aid: ardent:ardent-v1-operations-api
+  name: Ardent v1-operations API
+  description: The v1-operations API from Ardent — 1 operation(s) for v1-operations.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-operations
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-operations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tryardent.com/api/overview
+  - type: APIReference
+    url: https://docs.tryardent.com/api/overview
+  - type: Authentication
+    url: https://docs.tryardent.com/api/authentication
+- aid: ardent:ardent-v1-orgs-api
+  name: Ardent v1-orgs API
+  description: The v1-orgs API from Ardent — 7 operation(s) for v1-orgs.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-orgs
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-orgs-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tryardent.com/api/overview
+  - type: APIReference
+    url: https://docs.tryardent.com/api/overview
+  - type: Authentication
+    url: https://docs.tryardent.com/api/authentication
+- aid: ardent:ardent-v1-projects-api
+  name: Ardent v1-projects API
+  description: The v1-projects API from Ardent — 2 operation(s) for v1-projects.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-projects
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-projects-api-openapi.yml
+  - type: Documentation
+    url: https://docs.tryardent.com/api/overview
+  - type: APIReference
+    url: https://docs.tryardent.com/api/overview
+  - type: Authentication
+    url: https://docs.tryardent.com/api/authentication
+common:
+- type: Packages
+  url: packages/ardent-packages.yml
+- type: CLI
+  url: cli/ardent-cli.yml
+- type: LLMsTxt
+  url: llms/ardent-llms.txt
+- type: MCPServer
+  url: mcp/ardent-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Sandbox
+  url: sandbox/ardent-sandbox.yml
+- type: Conventions
+  url: conventions/ardent-conventions.yml
+- type: Lifecycle
+  url: lifecycle/ardent-lifecycle.yml
+- type: Conformance
+  url: conformance/ardent-conformance.yml
+- type: ErrorCatalog
+  url: errors/ardent-problem-types.yml
+- type: DataModel
+  url: data-model/ardent-data-model.yml
+- type: Overlay
+  url: overlays/ardent-openapi-overlay.yaml
+- type: DomainSecurity
+  url: security/ardent-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/ardent-agentic-access.yml
+- type: Authentication
+  url: authentication/ardent-authentication.yml
+- type: DeveloperPortal
+  url: https://docs.tryardent.com
+- type: Documentation
+  url: https://docs.tryardent.com
+- type: APIReference
+  url: https://docs.tryardent.com/api/overview
+- type: GettingStarted
+  url: https://docs.tryardent.com/quickstart
+- type: Support
+  url: https://docs.tryardent.com/contact
+- type: Pricing
+  url: https://www.tryardent.com/pricing
+- type: SignUp
+  url: https://app.tryardent.com/signup
+- type: Login
+  url: https://app.tryardent.com
+- type: TermsOfService
+  url: https://www.tryardent.com/legal/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://www.tryardent.com/legal/privacy-policy
+- type: X
+  url: https://x.com/ArdentAI
+- type: LinkedIn
+  url: https://www.linkedin.com/company/ardent-db
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
