@@ -1,0 +1,356 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ardent v1-api-keys v1-connectors API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "v1-connectors",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Connectors Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tryardent.com/v1/connectors",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "connector_category",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "service_name",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Connectors Endpoint"
+        },
+        {
+          "info": {
+            "name": "Create Connector Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create Connector Endpoint"
+        },
+        {
+          "info": {
+            "name": "Preflight Connector Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors/preflight",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Preflight Connector Endpoint"
+        },
+        {
+          "info": {
+            "name": "Get Connector Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Connector Endpoint"
+        },
+        {
+          "info": {
+            "name": "Update Connector Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update Connector Endpoint"
+        },
+        {
+          "info": {
+            "name": "Delete Connector Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "force",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete Connector Endpoint"
+        },
+        {
+          "info": {
+            "name": "Lock Connector Deletion Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/deletion-lock",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Lock Connector Deletion Endpoint"
+        },
+        {
+          "info": {
+            "name": "Unlock Connector Deletion Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/deletion-lock",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Unlock Connector Deletion Endpoint"
+        },
+        {
+          "info": {
+            "name": "Discover Connector Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/discover",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Discover Connector Endpoint"
+        },
+        {
+          "info": {
+            "name": "Engine Setup Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/engine-setup",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Engine Setup Endpoint"
+        },
+        {
+          "info": {
+            "name": "List Connector Quarantines Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/quarantine",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Connector Quarantines Endpoint"
+        },
+        {
+          "info": {
+            "name": "Release Quarantine Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/quarantine/:quarantine_id/release",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "quarantine_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Release Quarantine Endpoint"
+        },
+        {
+          "info": {
+            "name": "Set Replica Identity Decisions Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/replica-identity-decisions",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Set Replica Identity Decisions Endpoint"
+        },
+        {
+          "info": {
+            "name": "Set Selection Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/connectors/:connector_id/selection",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Set Selection Endpoint"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

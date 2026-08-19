@@ -1,0 +1,46 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ardent v1-api-keys v1-operations API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "v1-operations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Operation Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tryardent.com/v1/operations/:operation_id",
+            "params": [
+              {
+                "name": "operation_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "wait",
+                "value": "",
+                "type": "query",
+                "description": "Optionally wait up to this many seconds for a terminal operation state. Omit for the existing immediate poll response."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Operation Endpoint"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

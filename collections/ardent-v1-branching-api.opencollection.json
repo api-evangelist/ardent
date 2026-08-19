@@ -1,0 +1,65 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ardent v1-api-keys v1-branching API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "v1-branching",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Service Branch",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/branch/create",
+            "headers": [
+              {
+                "name": "X-Idempotency-Key",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create Service Branch"
+        },
+        {
+          "info": {
+            "name": "Get Branches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tryardent.com/v1/branches/:connector_id",
+            "params": [
+              {
+                "name": "connector_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get Branches"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

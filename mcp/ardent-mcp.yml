@@ -2,10 +2,9 @@ generated: '2026-07-18'
 method: derived
 status: candidate
 source: openapi/ardent-openapi-original.json
-summary: >-
-  No official hosted/remote Ardent MCP server was found (docs, npm @modelcontextprotocol, MCP
-  registries). This is a candidate tool surface derived one-to-one from the 35 REST operations so an
-  agent server can be scaffolded; Ardent's workflows/ai-agents guide targets agents via the CLI/API.
+summary: No official hosted/remote Ardent MCP server was found (docs, npm @modelcontextprotocol, MCP registries).
+  This is a candidate tool surface derived one-to-one from the 35 REST operations so an agent server can
+  be scaffolded; Ardent's workflows/ai-agents guide targets agents via the CLI/API.
 server:
   name: ardent
   transport: http
@@ -48,6 +47,11 @@ tools:
 - name: create_api_key
   description: Create an organization API key with a role and optional scopes.
   source_operation: openapi/ardent-openapi-original.json#create_new_api_key_v1_orgs__org_id__api_keys_post
-notes: >-
-  Candidate list is a representative subset across the connector/branch/operation/project/api-key
+notes: Candidate list is a representative subset across the connector/branch/operation/project/api-key
   surfaces; the full 35-operation spec at openapi/ardent-openapi-original.json is the source of truth.
+deployment:
+  mode: none
+  verified: derived
+  tools: 12
+  checked: '2026-08-12'
+  source: catalog MCP census

@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ardent v1-api-keys API",
+    "version": "v1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "v1-api-keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Api Keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.tryardent.com/v1/orgs/:org_id/api-keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "List Api Keys"
+        },
+        {
+          "info": {
+            "name": "Create New Api Key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.tryardent.com/v1/orgs/:org_id/api-keys",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create New Api Key"
+        },
+        {
+          "info": {
+            "name": "Revoke Api Key Endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.tryardent.com/v1/orgs/:org_id/api-keys/:api_key_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "api_key_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Revoke Api Key Endpoint"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
