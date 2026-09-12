@@ -159,6 +159,8 @@ apis:
   - type: Authentication
     url: https://docs.tryardent.com/api/authentication
 common:
+- type: Website
+  url: https://www.tryardent.com/
 - type: Packages
   url: packages/ardent-packages.yml
 - type: CLI
