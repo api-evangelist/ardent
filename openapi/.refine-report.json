@@ -1,12 +1,7 @@
 {
   "provider": "ardent",
   "sources": [
-    "ardent-v1-api-keys-api-openapi.yml",
-    "ardent-v1-branching-api-openapi.yml",
-    "ardent-v1-connectors-api-openapi.yml",
-    "ardent-v1-operations-api-openapi.yml",
-    "ardent-v1-orgs-api-openapi.yml",
-    "ardent-v1-projects-api-openapi.yml"
+    "_original/ardent-openapi-original.json"
   ],
   "outputs": [
     "ardent-v1-api-keys-api-openapi.yml",
@@ -19,6 +14,23 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "ardent-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "ardent-openapi-original.json: declared missing tag: v1-api-keys",
+    "ardent-openapi-original.json: declared missing tag: v1-branching",
+    "ardent-openapi-original.json: declared missing tag: v1-connectors",
+    "ardent-openapi-original.json: declared missing tag: v1-operations",
+    "ardent-openapi-original.json: declared missing tag: v1-orgs",
+    "ardent-openapi-original.json: declared missing tag: v1-projects",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "ardent-v1-api-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ardent-v1-branching-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ardent-v1-connectors-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ardent-v1-operations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ardent-v1-orgs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ardent-v1-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
