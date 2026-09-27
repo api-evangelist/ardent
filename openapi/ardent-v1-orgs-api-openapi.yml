@@ -328,27 +328,6 @@ paths:
       - v1-orgs
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    UpdateOrgRequest:
-      properties:
-        name:
-          description: New organization name
-          maxLength: 100
-          minLength: 1
-          title: Name
-          type: string
-      required:
-      - name
-      title: UpdateOrgRequest
-      type: object
     UpdateMemberRoleRequest:
       properties:
         role_key:
@@ -373,6 +352,27 @@ components:
       required:
       - email
       title: InviteUserRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    UpdateOrgRequest:
+      properties:
+        name:
+          description: New organization name
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+      required:
+      - name
+      title: UpdateOrgRequest
       type: object
     ValidationError:
       properties:

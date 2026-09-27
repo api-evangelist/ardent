@@ -163,33 +163,6 @@ paths:
       - v1 projects
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    CreateProjectRequest:
-      properties:
-        name:
-          description: Project name (1-100 characters).
-          maxLength: 100
-          minLength: 1
-          title: Name
-          type: string
-        org_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Organization to create the project in. Inferred from your auth when omitted.
-          title: Org Id
-      required:
-      - name
-      title: CreateProjectRequest
-      type: object
     ProjectListResponse:
       properties:
         projects:
@@ -239,6 +212,33 @@ components:
       - name
       - created_at
       title: ProjectRow
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    CreateProjectRequest:
+      properties:
+        name:
+          description: Project name (1-100 characters).
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Organization to create the project in. Inferred from your auth when omitted.
+          title: Org Id
+      required:
+      - name
+      title: CreateProjectRequest
       type: object
     ValidationError:
       properties:

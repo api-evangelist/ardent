@@ -105,58 +105,6 @@ paths:
       - v1-branching
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    OperationHandle:
-      properties:
-        operation_id:
-          description: Operation to poll at `GET /v1/operations/{operation_id}`.
-          title: Operation Id
-          type: string
-        resource_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: ID of the resource being created or acted on (the branch ID for branch create).
-          title: Resource Id
-        status:
-          $ref: '#/components/schemas/OperationStatus'
-          description: Status at acceptance time.
-        type:
-          $ref: '#/components/schemas/OperationType'
-          description: The kind of work this operation tracks, for example `branch_create`.
-      required:
-      - operation_id
-      - status
-      - type
-      - resource_id
-      title: OperationHandle
-      type: object
-    OperationType:
-      enum:
-      - connector_engine_setup
-      - connector_reset
-      - connector_deep_reset
-      - connector_discovery
-      - connector_delete
-      - connector_secret_purge
-      - connector_rollout
-      - connector_replication_rollback
-      - connector_debezium_cutover
-      - connector_debezium_shadow_cleanup
-      - environment_deploy
-      - environment_destroy
-      - branch_create
-      - branch_delete
-      title: OperationType
-      type: string
     OperationStatus:
       enum:
       - pending
@@ -243,6 +191,58 @@ components:
       - created_at
       title: BranchRow
       type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    OperationHandle:
+      properties:
+        operation_id:
+          description: Operation to poll at `GET /v1/operations/{operation_id}`.
+          title: Operation Id
+          type: string
+        resource_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: ID of the resource being created or acted on (the branch ID for branch create).
+          title: Resource Id
+        status:
+          $ref: '#/components/schemas/OperationStatus'
+          description: Status at acceptance time.
+        type:
+          $ref: '#/components/schemas/OperationType'
+          description: The kind of work this operation tracks, for example `branch_create`.
+      required:
+      - operation_id
+      - status
+      - type
+      - resource_id
+      title: OperationHandle
+      type: object
+    OperationType:
+      enum:
+      - connector_engine_setup
+      - connector_reset
+      - connector_deep_reset
+      - connector_discovery
+      - connector_delete
+      - connector_secret_purge
+      - connector_rollout
+      - connector_replication_rollback
+      - connector_debezium_cutover
+      - connector_debezium_shadow_cleanup
+      - environment_deploy
+      - environment_destroy
+      - branch_create
+      - branch_delete
+      title: OperationType
+      type: string
     ValidationError:
       properties:
         ctx:

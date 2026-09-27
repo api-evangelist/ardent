@@ -52,6 +52,14 @@ paths:
       - v1-operations
 components:
   schemas:
+    OperationStatus:
+      enum:
+      - pending
+      - running
+      - completed
+      - failed
+      title: OperationStatus
+      type: string
     HTTPValidationError:
       properties:
         detail:
@@ -61,6 +69,24 @@ components:
           type: array
       title: HTTPValidationError
       type: object
+    OperationType:
+      enum:
+      - connector_engine_setup
+      - connector_reset
+      - connector_deep_reset
+      - connector_discovery
+      - connector_delete
+      - connector_secret_purge
+      - connector_rollout
+      - connector_replication_rollback
+      - connector_debezium_cutover
+      - connector_debezium_shadow_cleanup
+      - environment_deploy
+      - environment_destroy
+      - branch_create
+      - branch_delete
+      title: OperationType
+      type: string
     AsyncOperationResponse:
       properties:
         completed_at:
@@ -153,32 +179,6 @@ components:
       - updated_at
       title: AsyncOperationResponse
       type: object
-    OperationType:
-      enum:
-      - connector_engine_setup
-      - connector_reset
-      - connector_deep_reset
-      - connector_discovery
-      - connector_delete
-      - connector_secret_purge
-      - connector_rollout
-      - connector_replication_rollback
-      - connector_debezium_cutover
-      - connector_debezium_shadow_cleanup
-      - environment_deploy
-      - environment_destroy
-      - branch_create
-      - branch_delete
-      title: OperationType
-      type: string
-    OperationStatus:
-      enum:
-      - pending
-      - running
-      - completed
-      - failed
-      title: OperationStatus
-      type: string
     ValidationError:
       properties:
         ctx:
