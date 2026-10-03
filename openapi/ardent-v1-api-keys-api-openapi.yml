@@ -113,95 +113,6 @@ paths:
       - v1-api-keys
 components:
   schemas:
-    APIKeyCreateResponse:
-      additionalProperties: true
-      properties:
-        api_key:
-          description: The full secret key; shown only this once — store it now.
-          title: Api Key
-          type: string
-        api_key_id:
-          description: ID of the created key.
-          title: Api Key Id
-          type: string
-        created_at:
-          description: When the key was created.
-          title: Created At
-          type: string
-        expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: When the key expires. Null when it does not expire.
-          title: Expires At
-        key_prefix:
-          description: First characters of the key, for identifying it in lists.
-          title: Key Prefix
-          type: string
-        name:
-          description: Human-readable key name.
-          title: Name
-          type: string
-        role_id:
-          description: ID of the role granted to the key.
-          title: Role Id
-          type: string
-        role_key:
-          description: The role's stable key, for example `role_org_member`.
-          title: Role Key
-          type: string
-        scopes:
-          description: Permission scopes granted to the key.
-          items:
-            type: string
-          title: Scopes
-          type: array
-        warning:
-          description: Reminder that the secret cannot be retrieved again.
-          title: Warning
-          type: string
-      required:
-      - api_key_id
-      - api_key
-      - name
-      - key_prefix
-      - scopes
-      - created_at
-      - warning
-      - role_id
-      - role_key
-      title: APIKeyCreateResponse
-      type: object
-    CreateAPIKeyRequest:
-      properties:
-        expires_days:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          description: Days until expiration (null = never expires)
-          title: Expires Days
-        name:
-          description: Descriptive name for the key
-          maxLength: 100
-          minLength: 1
-          title: Name
-          type: string
-        role_id:
-          description: Role ID to grant to this API key (e.g., role_org_member)
-          title: Role Id
-          type: string
-        scopes:
-          default: []
-          description: Permission keys like `connectors.read`, a subset of the role's; empty uses all.
-          items:
-            type: string
-          title: Scopes
-          type: array
-      required:
-      - name
-      - role_id
-      title: CreateAPIKeyRequest
-      type: object
     APIKeyListItem:
       additionalProperties: true
       properties:
@@ -260,15 +171,6 @@ components:
       - created_at
       title: APIKeyListItem
       type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     ValidationError:
       properties:
         ctx:
@@ -294,6 +196,104 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    CreateAPIKeyRequest:
+      properties:
+        expires_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          description: Days until expiration (null = never expires)
+          title: Expires Days
+        name:
+          description: Descriptive name for the key
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        role_id:
+          description: Role ID to grant to this API key (e.g., role_org_member)
+          title: Role Id
+          type: string
+        scopes:
+          default: []
+          description: Permission keys like `connectors.read`, a subset of the role's; empty uses all.
+          items:
+            type: string
+          title: Scopes
+          type: array
+      required:
+      - name
+      - role_id
+      title: CreateAPIKeyRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    APIKeyCreateResponse:
+      additionalProperties: true
+      properties:
+        api_key:
+          description: The full secret key; shown only this once — store it now.
+          title: Api Key
+          type: string
+        api_key_id:
+          description: ID of the created key.
+          title: Api Key Id
+          type: string
+        created_at:
+          description: When the key was created.
+          title: Created At
+          type: string
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: When the key expires. Null when it does not expire.
+          title: Expires At
+        key_prefix:
+          description: First characters of the key, for identifying it in lists.
+          title: Key Prefix
+          type: string
+        name:
+          description: Human-readable key name.
+          title: Name
+          type: string
+        role_id:
+          description: ID of the role granted to the key.
+          title: Role Id
+          type: string
+        role_key:
+          description: The role's stable key, for example `role_org_member`.
+          title: Role Key
+          type: string
+        scopes:
+          description: Permission scopes granted to the key.
+          items:
+            type: string
+          title: Scopes
+          type: array
+        warning:
+          description: Reminder that the secret cannot be retrieved again.
+          title: Warning
+          type: string
+      required:
+      - api_key_id
+      - api_key
+      - name
+      - key_prefix
+      - scopes
+      - created_at
+      - warning
+      - role_id
+      - role_key
+      title: APIKeyCreateResponse
       type: object
   securitySchemes:
     bearerAuth:

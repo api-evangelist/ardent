@@ -338,30 +338,6 @@ components:
       - role_key
       title: UpdateMemberRoleRequest
       type: object
-    InviteUserRequest:
-      properties:
-        email:
-          description: Email address to invite
-          title: Email
-          type: string
-        role_key:
-          default: member
-          description: Role to assign (owner/admin/member/viewer)
-          title: Role Key
-          type: string
-      required:
-      - email
-      title: InviteUserRequest
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     UpdateOrgRequest:
       properties:
         name:
@@ -399,6 +375,30 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    InviteUserRequest:
+      properties:
+        email:
+          description: Email address to invite
+          title: Email
+          type: string
+        role_key:
+          default: member
+          description: Role to assign (owner/admin/member/viewer)
+          title: Role Key
+          type: string
+      required:
+      - email
+      title: InviteUserRequest
       type: object
   securitySchemes:
     bearerAuth:

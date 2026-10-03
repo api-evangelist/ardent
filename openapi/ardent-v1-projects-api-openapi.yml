@@ -163,29 +163,23 @@ paths:
       - v1 projects
 components:
   schemas:
-    ProjectListResponse:
-      properties:
-        projects:
-          description: Projects visible to the caller.
-          items:
-            $ref: '#/components/schemas/ProjectRow'
-          title: Projects
-          type: array
-      required:
-      - projects
-      title: ProjectListResponse
-      type: object
-    UpdateProjectRequest:
+    CreateProjectRequest:
       properties:
         name:
-          anyOf:
-          - maxLength: 100
-            minLength: 1
-            type: string
-          - type: 'null'
-          description: New project name (1-100 characters).
+          description: Project name (1-100 characters).
+          maxLength: 100
+          minLength: 1
           title: Name
-      title: UpdateProjectRequest
+          type: string
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Organization to create the project in. Inferred from your auth when omitted.
+          title: Org Id
+      required:
+      - name
+      title: CreateProjectRequest
       type: object
     ProjectRow:
       additionalProperties: true
@@ -213,33 +207,6 @@ components:
       - created_at
       title: ProjectRow
       type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    CreateProjectRequest:
-      properties:
-        name:
-          description: Project name (1-100 characters).
-          maxLength: 100
-          minLength: 1
-          title: Name
-          type: string
-        org_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Organization to create the project in. Inferred from your auth when omitted.
-          title: Org Id
-      required:
-      - name
-      title: CreateProjectRequest
-      type: object
     ValidationError:
       properties:
         ctx:
@@ -265,6 +232,39 @@ components:
       - msg
       - type
       title: ValidationError
+      type: object
+    UpdateProjectRequest:
+      properties:
+        name:
+          anyOf:
+          - maxLength: 100
+            minLength: 1
+            type: string
+          - type: 'null'
+          description: New project name (1-100 characters).
+          title: Name
+      title: UpdateProjectRequest
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    ProjectListResponse:
+      properties:
+        projects:
+          description: Projects visible to the caller.
+          items:
+            $ref: '#/components/schemas/ProjectRow'
+          title: Projects
+          type: array
+      required:
+      - projects
+      title: ProjectListResponse
       type: object
   securitySchemes:
     bearerAuth:
