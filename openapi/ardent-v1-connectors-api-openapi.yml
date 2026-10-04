@@ -511,6 +511,74 @@ paths:
       - v1-connectors
 components:
   schemas:
+    ConnectorListResponse:
+      properties:
+        connectors:
+          description: Connectors in the organization, visible to the caller.
+          items:
+            $ref: '#/components/schemas/ConnectorRow'
+          title: Connectors
+          type: array
+      required:
+      - connectors
+      title: ConnectorListResponse
+      type: object
+    ConnectorRow:
+      additionalProperties: true
+      properties:
+        can_delete:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether the caller may delete this connector.
+          title: Can Delete
+        can_update:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether the caller may update this connector.
+          title: Can Update
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: When the connector was created.
+          title: Created At
+        id:
+          description: Connector ID.
+          title: Id
+          type: string
+        name:
+          description: Connector name.
+          title: Name
+          type: string
+        org_id:
+          description: Organization the connector belongs to.
+          title: Org Id
+          type: string
+        project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Project the connector belongs to.
+          title: Project Id
+        service_name:
+          description: Service type. `postgresql` today.
+          title: Service Name
+          type: string
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Current connector status.
+          title: Status
+      required:
+      - id
+      - org_id
+      - name
+      - service_name
+      title: ConnectorRow
+      type: object
     OperationHandle:
       properties:
         operation_id:
@@ -535,6 +603,93 @@ components:
       - type
       - resource_id
       title: OperationHandle
+      type: object
+    ReplicaIdentityDecisionsRequest:
+      properties:
+        decisions:
+          additionalProperties:
+            type: string
+          description: 'Per-table decision: `exclude`, `add_pk`, or `replica_identity_full`.'
+          title: Decisions
+          type: object
+      required:
+      - decisions
+      title: ReplicaIdentityDecisionsRequest
+      type: object
+    UpdateConnectorRequest:
+      properties:
+        connection_details:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Replacement connection details for the source database.
+          title: Connection Details
+        drop_extensions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: Extensions to drop on branches; omit to leave unchanged, `[]` clears.
+          title: Drop Extensions
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: New connector name.
+          title: Name
+        project_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Move the connector to this project.
+          title: Project Id
+      title: UpdateConnectorRequest
+      type: object
+    ConnectorEnvelope:
+      properties:
+        connector:
+          $ref: '#/components/schemas/ConnectorRow'
+          description: The connector's current row.
+      required:
+      - connector
+      title: ConnectorEnvelope
+      type: object
+    ValidationError:
+      properties:
+        ctx:
+          title: Context
+          type: object
+        input:
+          title: Input
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     PreflightConnectorRequest:
       properties:
@@ -593,221 +748,6 @@ components:
       - service_name
       - connection_details
       title: PreflightConnectorRequest
-      type: object
-    OperationType:
-      enum:
-      - connector_engine_setup
-      - connector_reset
-      - connector_deep_reset
-      - connector_discovery
-      - connector_delete
-      - connector_secret_purge
-      - connector_rollout
-      - connector_replication_rollback
-      - connector_debezium_cutover
-      - connector_debezium_shadow_cleanup
-      - environment_deploy
-      - environment_destroy
-      - branch_create
-      - branch_delete
-      title: OperationType
-      type: string
-    OperationStatus:
-      enum:
-      - pending
-      - running
-      - completed
-      - failed
-      title: OperationStatus
-      type: string
-    QuarantineListResponse:
-      properties:
-        quarantines:
-          description: Active (still paused) quarantines for the connector.
-          items:
-            $ref: '#/components/schemas/QuarantineRow'
-          title: Quarantines
-          type: array
-      required:
-      - quarantines
-      title: QuarantineListResponse
-      type: object
-    CreateConnectorRequest:
-      properties:
-        allow_high_rtt_placement:
-          default: false
-          description: Allow customer-cloud placement far from the worker region.
-          title: Allow High Rtt Placement
-          type: boolean
-        connection_details:
-          additionalProperties: true
-          description: Connection details for the source database.
-          title: Connection Details
-          type: object
-        drop_extensions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          description: Source extensions to drop on branches instead of installing.
-          title: Drop Extensions
-        environment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Customer-cloud environment; required when your org has more than one.
-          title: Environment Id
-        name:
-          description: Connector name.
-          title: Name
-          type: string
-        org_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Organization to create the connector in. Inferred from your auth when omitted.
-          title: Org Id
-        private_link_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Private connection for the source database; needs `use_environment`.
-          title: Private Link Id
-        project_id:
-          description: Project to create the connector in.
-          title: Project Id
-          type: string
-        service_name:
-          description: Service type. `postgresql` is the only supported value today.
-          title: Service Name
-          type: string
-        use_environment:
-          default: false
-          description: Create the connector in a customer-cloud environment.
-          title: Use Environment
-          type: boolean
-      required:
-      - project_id
-      - name
-      - service_name
-      - connection_details
-      title: CreateConnectorRequest
-      type: object
-    ConnectorRow:
-      additionalProperties: true
-      properties:
-        can_delete:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: Whether the caller may delete this connector.
-          title: Can Delete
-        can_update:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: Whether the caller may update this connector.
-          title: Can Update
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: When the connector was created.
-          title: Created At
-        id:
-          description: Connector ID.
-          title: Id
-          type: string
-        name:
-          description: Connector name.
-          title: Name
-          type: string
-        org_id:
-          description: Organization the connector belongs to.
-          title: Org Id
-          type: string
-        project_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Project the connector belongs to.
-          title: Project Id
-        service_name:
-          description: Service type. `postgresql` today.
-          title: Service Name
-          type: string
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Current connector status.
-          title: Status
-      required:
-      - id
-      - org_id
-      - name
-      - service_name
-      title: ConnectorRow
-      type: object
-    ReplicaIdentityDecisionsRequest:
-      properties:
-        decisions:
-          additionalProperties:
-            type: string
-          description: 'Per-table decision: `exclude`, `add_pk`, or `replica_identity_full`.'
-          title: Decisions
-          type: object
-      required:
-      - decisions
-      title: ReplicaIdentityDecisionsRequest
-      type: object
-    SelectionRequest:
-      properties:
-        selected_paths:
-          description: Discovered paths to replicate. Use `["*"]` to select everything.
-          items:
-            type: string
-          title: Selected Paths
-          type: array
-      required:
-      - selected_paths
-      title: SelectionRequest
-      type: object
-    ConnectorEnvelope:
-      properties:
-        connector:
-          $ref: '#/components/schemas/ConnectorRow'
-          description: The connector's current row.
-      required:
-      - connector
-      title: ConnectorEnvelope
-      type: object
-    ValidationError:
-      properties:
-        ctx:
-          title: Context
-          type: object
-        input:
-          title: Input
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
       type: object
     DiscoverAccepted:
       properties:
@@ -893,6 +833,26 @@ components:
       - status
       title: QuarantineRow
       type: object
+    SelectionRequest:
+      properties:
+        selected_paths:
+          description: Discovered paths to replicate. Use `["*"]` to select everything.
+          items:
+            type: string
+          title: Selected Paths
+          type: array
+      required:
+      - selected_paths
+      title: SelectionRequest
+      type: object
+    OperationStatus:
+      enum:
+      - pending
+      - running
+      - completed
+      - failed
+      title: OperationStatus
+      type: string
     ConnectorDeletionLockRequest:
       properties:
         reason:
@@ -903,18 +863,6 @@ components:
           description: Why the connector is locked, up to 500 characters.
           title: Reason
       title: ConnectorDeletionLockRequest
-      type: object
-    ConnectorListResponse:
-      properties:
-        connectors:
-          description: Connectors in the organization, visible to the caller.
-          items:
-            $ref: '#/components/schemas/ConnectorRow'
-          title: Connectors
-          type: array
-      required:
-      - connectors
-      title: ConnectorListResponse
       type: object
     PreflightReport:
       additionalProperties: true
@@ -971,45 +919,97 @@ components:
           title: Source Provider
       title: PreflightReport
       type: object
-    HTTPValidationError:
+    CreateConnectorRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    UpdateConnectorRequest:
-      properties:
+        allow_high_rtt_placement:
+          default: false
+          description: Allow customer-cloud placement far from the worker region.
+          title: Allow High Rtt Placement
+          type: boolean
         connection_details:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Replacement connection details for the source database.
+          additionalProperties: true
+          description: Connection details for the source database.
           title: Connection Details
+          type: object
         drop_extensions:
           anyOf:
           - items:
               type: string
             type: array
           - type: 'null'
-          description: Extensions to drop on branches; omit to leave unchanged, `[]` clears.
+          description: Source extensions to drop on branches instead of installing.
           title: Drop Extensions
+        environment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Customer-cloud environment; required when your org has more than one.
+          title: Environment Id
         name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: New connector name.
+          description: Connector name.
           title: Name
-        project_id:
+          type: string
+        org_id:
           anyOf:
           - type: string
           - type: 'null'
-          description: Move the connector to this project.
+          description: Organization to create the connector in. Inferred from your auth when omitted.
+          title: Org Id
+        private_link_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Private connection for the source database; needs `use_environment`.
+          title: Private Link Id
+        project_id:
+          description: Project to create the connector in.
           title: Project Id
-      title: UpdateConnectorRequest
+          type: string
+        service_name:
+          description: Service type. `postgresql` is the only supported value today.
+          title: Service Name
+          type: string
+        use_environment:
+          default: false
+          description: Create the connector in a customer-cloud environment.
+          title: Use Environment
+          type: boolean
+      required:
+      - project_id
+      - name
+      - service_name
+      - connection_details
+      title: CreateConnectorRequest
+      type: object
+    OperationType:
+      enum:
+      - connector_engine_setup
+      - connector_reset
+      - connector_deep_reset
+      - connector_discovery
+      - connector_delete
+      - connector_secret_purge
+      - connector_rollout
+      - connector_replication_rollback
+      - connector_debezium_cutover
+      - connector_debezium_shadow_cleanup
+      - environment_deploy
+      - environment_destroy
+      - branch_create
+      - branch_delete
+      title: OperationType
+      type: string
+    QuarantineListResponse:
+      properties:
+        quarantines:
+          description: Active (still paused) quarantines for the connector.
+          items:
+            $ref: '#/components/schemas/QuarantineRow'
+          title: Quarantines
+          type: array
+      required:
+      - quarantines
+      title: QuarantineListResponse
       type: object
   securitySchemes:
     bearerAuth:

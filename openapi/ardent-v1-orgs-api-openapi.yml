@@ -338,17 +338,20 @@ components:
       - role_key
       title: UpdateMemberRoleRequest
       type: object
-    UpdateOrgRequest:
+    InviteUserRequest:
       properties:
-        name:
-          description: New organization name
-          maxLength: 100
-          minLength: 1
-          title: Name
+        email:
+          description: Email address to invite
+          title: Email
+          type: string
+        role_key:
+          default: member
+          description: Role to assign (owner/admin/member/viewer)
+          title: Role Key
           type: string
       required:
-      - name
-      title: UpdateOrgRequest
+      - email
+      title: InviteUserRequest
       type: object
     ValidationError:
       properties:
@@ -385,20 +388,17 @@ components:
           type: array
       title: HTTPValidationError
       type: object
-    InviteUserRequest:
+    UpdateOrgRequest:
       properties:
-        email:
-          description: Email address to invite
-          title: Email
-          type: string
-        role_key:
-          default: member
-          description: Role to assign (owner/admin/member/viewer)
-          title: Role Key
+        name:
+          description: New organization name
+          maxLength: 100
+          minLength: 1
+          title: Name
           type: string
       required:
-      - email
-      title: InviteUserRequest
+      - name
+      title: UpdateOrgRequest
       type: object
   securitySchemes:
     bearerAuth:
