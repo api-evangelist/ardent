@@ -511,17 +511,89 @@ paths:
       - v1-connectors
 components:
   schemas:
-    ConnectorListResponse:
+    QuarantineListResponse:
       properties:
-        connectors:
-          description: Connectors in the organization, visible to the caller.
+        quarantines:
+          description: Active (still paused) quarantines for the connector.
           items:
-            $ref: '#/components/schemas/ConnectorRow'
-          title: Connectors
+            $ref: '#/components/schemas/QuarantineRow'
+          title: Quarantines
           type: array
       required:
-      - connectors
-      title: ConnectorListResponse
+      - quarantines
+      title: QuarantineListResponse
+      type: object
+    OperationType:
+      enum:
+      - connector_engine_setup
+      - connector_reset
+      - connector_deep_reset
+      - connector_discovery
+      - connector_delete
+      - connector_secret_purge
+      - connector_rollout
+      - connector_replication_rollback
+      - connector_debezium_cutover
+      - connector_debezium_shadow_cleanup
+      - environment_deploy
+      - environment_destroy
+      - branch_create
+      - branch_delete
+      title: OperationType
+      type: string
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    OperationStatus:
+      enum:
+      - pending
+      - running
+      - completed
+      - failed
+      title: OperationStatus
+      type: string
+    ConnectorDeletionLockRequest:
+      properties:
+        reason:
+          anyOf:
+          - maxLength: 500
+            type: string
+          - type: 'null'
+          description: Why the connector is locked, up to 500 characters.
+          title: Reason
+      title: ConnectorDeletionLockRequest
+      type: object
+    ValidationError:
+      properties:
+        ctx:
+          title: Context
+          type: object
+        input:
+          title: Input
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
       type: object
     ConnectorRow:
       additionalProperties: true
@@ -579,117 +651,105 @@ components:
       - service_name
       title: ConnectorRow
       type: object
-    OperationHandle:
+    QuarantineRow:
+      additionalProperties: true
       properties:
-        operation_id:
-          description: Operation to poll at `GET /v1/operations/{operation_id}`.
-          title: Operation Id
+        connector_id:
+          description: Connector the quarantine belongs to.
+          title: Connector Id
           type: string
-        resource_id:
+        deployment_name:
           anyOf:
           - type: string
           - type: 'null'
-          description: ID of the resource being created or acted on (the branch ID for branch create).
-          title: Resource Id
+          description: Replication deployment that was paused.
+          title: Deployment Name
+        id:
+          description: Quarantine ID.
+          title: Id
+          type: string
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Human-readable status message.
+          title: Message
+        released_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: When the quarantine was released. Null while paused.
+          title: Released At
+        released_by:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Who released the quarantine. Null while paused.
+          title: Released By
         status:
-          $ref: '#/components/schemas/OperationStatus'
-          description: Status at acceptance time.
-        type:
-          $ref: '#/components/schemas/OperationType'
-          description: The kind of work this operation tracks, for example `branch_create`.
+          description: '`quarantined` while paused, `released` after release.'
+          title: Status
+          type: string
       required:
-      - operation_id
+      - id
+      - connector_id
       - status
-      - type
-      - resource_id
-      title: OperationHandle
+      title: QuarantineRow
       type: object
-    ReplicaIdentityDecisionsRequest:
+    PreflightReport:
+      additionalProperties: true
       properties:
-        decisions:
-          additionalProperties:
-            type: string
-          description: 'Per-table decision: `exclude`, `add_pk`, or `replica_identity_full`.'
-          title: Decisions
-          type: object
-      required:
-      - decisions
-      title: ReplicaIdentityDecisionsRequest
-      type: object
-    UpdateConnectorRequest:
-      properties:
-        connection_details:
+        branching_prerequisites_pass:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: True when the checks required for branching pass.
+          title: Branching Prerequisites Pass
+        checks:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          description: Replacement connection details for the source database.
-          title: Connection Details
-        drop_extensions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          description: Extensions to drop on branches; omit to leave unchanged, `[]` clears.
-          title: Drop Extensions
-        name:
+          description: Individual check results, keyed by check name.
+          title: Checks
+        grant_script:
           anyOf:
           - type: string
           - type: 'null'
-          description: New connector name.
-          title: Name
-        project_id:
+          description: Ready-to-run SQL grant script for the source database.
+          title: Grant Script
+        preflight_pass:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          description: True when every preflight check passes.
+          title: Preflight Pass
+        source_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          description: Metadata gathered from the source during preflight.
+          title: Source Metadata
+        source_placement:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Source Placement
+        source_preflight:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Source Preflight
+        source_provider:
           anyOf:
           - type: string
           - type: 'null'
-          description: Move the connector to this project.
-          title: Project Id
-      title: UpdateConnectorRequest
-      type: object
-    ConnectorEnvelope:
-      properties:
-        connector:
-          $ref: '#/components/schemas/ConnectorRow'
-          description: The connector's current row.
-      required:
-      - connector
-      title: ConnectorEnvelope
-      type: object
-    ValidationError:
-      properties:
-        ctx:
-          title: Context
-          type: object
-        input:
-          title: Input
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
-          type: array
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-      type: object
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+          description: Detected source provider, for example `supabase` or `vanilla`.
+          title: Source Provider
+      title: PreflightReport
       type: object
     PreflightConnectorRequest:
       properties:
@@ -749,6 +809,15 @@ components:
       - connection_details
       title: PreflightConnectorRequest
       type: object
+    ConnectorEnvelope:
+      properties:
+        connector:
+          $ref: '#/components/schemas/ConnectorRow'
+          description: The connector's current row.
+      required:
+      - connector
+      title: ConnectorEnvelope
+      type: object
     DiscoverAccepted:
       properties:
         operation_id:
@@ -788,136 +857,85 @@ components:
       - resource_id
       title: DiscoverAccepted
       type: object
-    QuarantineRow:
-      additionalProperties: true
+    OperationHandle:
       properties:
-        connector_id:
-          description: Connector the quarantine belongs to.
-          title: Connector Id
+        operation_id:
+          description: Operation to poll at `GET /v1/operations/{operation_id}`.
+          title: Operation Id
           type: string
-        deployment_name:
+        resource_id:
           anyOf:
           - type: string
           - type: 'null'
-          description: Replication deployment that was paused.
-          title: Deployment Name
-        id:
-          description: Quarantine ID.
-          title: Id
-          type: string
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Human-readable status message.
-          title: Message
-        released_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: When the quarantine was released. Null while paused.
-          title: Released At
-        released_by:
-          anyOf:
-          - type: string
-          - type: 'null'
-          description: Who released the quarantine. Null while paused.
-          title: Released By
+          description: ID of the resource being created or acted on (the branch ID for branch create).
+          title: Resource Id
         status:
-          description: '`quarantined` while paused, `released` after release.'
-          title: Status
-          type: string
+          $ref: '#/components/schemas/OperationStatus'
+          description: Status at acceptance time.
+        type:
+          $ref: '#/components/schemas/OperationType'
+          description: The kind of work this operation tracks, for example `branch_create`.
       required:
-      - id
-      - connector_id
+      - operation_id
       - status
-      title: QuarantineRow
+      - type
+      - resource_id
+      title: OperationHandle
       type: object
-    SelectionRequest:
+    ReplicaIdentityDecisionsRequest:
       properties:
-        selected_paths:
-          description: Discovered paths to replicate. Use `["*"]` to select everything.
-          items:
+        decisions:
+          additionalProperties:
             type: string
-          title: Selected Paths
+          description: 'Per-table decision: `exclude`, `add_pk`, or `replica_identity_full`.'
+          title: Decisions
+          type: object
+      required:
+      - decisions
+      title: ReplicaIdentityDecisionsRequest
+      type: object
+    ConnectorListResponse:
+      properties:
+        connectors:
+          description: Connectors in the organization, visible to the caller.
+          items:
+            $ref: '#/components/schemas/ConnectorRow'
+          title: Connectors
           type: array
       required:
-      - selected_paths
-      title: SelectionRequest
+      - connectors
+      title: ConnectorListResponse
       type: object
-    OperationStatus:
-      enum:
-      - pending
-      - running
-      - completed
-      - failed
-      title: OperationStatus
-      type: string
-    ConnectorDeletionLockRequest:
+    UpdateConnectorRequest:
       properties:
-        reason:
-          anyOf:
-          - maxLength: 500
-            type: string
-          - type: 'null'
-          description: Why the connector is locked, up to 500 characters.
-          title: Reason
-      title: ConnectorDeletionLockRequest
-      type: object
-    PreflightReport:
-      additionalProperties: true
-      properties:
-        branching_prerequisites_pass:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: True when the checks required for branching pass.
-          title: Branching Prerequisites Pass
-        checks:
+        connection_details:
           anyOf:
           - additionalProperties: true
             type: object
           - type: 'null'
-          description: Individual check results, keyed by check name.
-          title: Checks
-        grant_script:
+          description: Replacement connection details for the source database.
+          title: Connection Details
+        drop_extensions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          description: Extensions to drop on branches; omit to leave unchanged, `[]` clears.
+          title: Drop Extensions
+        name:
           anyOf:
           - type: string
           - type: 'null'
-          description: Ready-to-run SQL grant script for the source database.
-          title: Grant Script
-        preflight_pass:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          description: True when every preflight check passes.
-          title: Preflight Pass
-        source_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          description: Metadata gathered from the source during preflight.
-          title: Source Metadata
-        source_placement:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Source Placement
-        source_preflight:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Source Preflight
-        source_provider:
+          description: New connector name.
+          title: Name
+        project_id:
           anyOf:
           - type: string
           - type: 'null'
-          description: Detected source provider, for example `supabase` or `vanilla`.
-          title: Source Provider
-      title: PreflightReport
+          description: Move the connector to this project.
+          title: Project Id
+      title: UpdateConnectorRequest
       type: object
     CreateConnectorRequest:
       properties:
@@ -981,35 +999,17 @@ components:
       - connection_details
       title: CreateConnectorRequest
       type: object
-    OperationType:
-      enum:
-      - connector_engine_setup
-      - connector_reset
-      - connector_deep_reset
-      - connector_discovery
-      - connector_delete
-      - connector_secret_purge
-      - connector_rollout
-      - connector_replication_rollback
-      - connector_debezium_cutover
-      - connector_debezium_shadow_cleanup
-      - environment_deploy
-      - environment_destroy
-      - branch_create
-      - branch_delete
-      title: OperationType
-      type: string
-    QuarantineListResponse:
+    SelectionRequest:
       properties:
-        quarantines:
-          description: Active (still paused) quarantines for the connector.
+        selected_paths:
+          description: Discovered paths to replicate. Use `["*"]` to select everything.
           items:
-            $ref: '#/components/schemas/QuarantineRow'
-          title: Quarantines
+            type: string
+          title: Selected Paths
           type: array
       required:
-      - quarantines
-      title: QuarantineListResponse
+      - selected_paths
+      title: SelectionRequest
       type: object
   securitySchemes:
     bearerAuth:

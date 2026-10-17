@@ -328,30 +328,14 @@ paths:
       - v1-orgs
 components:
   schemas:
-    UpdateMemberRoleRequest:
+    HTTPValidationError:
       properties:
-        role_key:
-          description: New role to assign (owner/admin/member/viewer)
-          title: Role Key
-          type: string
-      required:
-      - role_key
-      title: UpdateMemberRoleRequest
-      type: object
-    InviteUserRequest:
-      properties:
-        email:
-          description: Email address to invite
-          title: Email
-          type: string
-        role_key:
-          default: member
-          description: Role to assign (owner/admin/member/viewer)
-          title: Role Key
-          type: string
-      required:
-      - email
-      title: InviteUserRequest
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
+          type: array
+      title: HTTPValidationError
       type: object
     ValidationError:
       properties:
@@ -379,14 +363,20 @@ components:
       - type
       title: ValidationError
       type: object
-    HTTPValidationError:
+    InviteUserRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
+        email:
+          description: Email address to invite
+          title: Email
+          type: string
+        role_key:
+          default: member
+          description: Role to assign (owner/admin/member/viewer)
+          title: Role Key
+          type: string
+      required:
+      - email
+      title: InviteUserRequest
       type: object
     UpdateOrgRequest:
       properties:
@@ -399,6 +389,16 @@ components:
       required:
       - name
       title: UpdateOrgRequest
+      type: object
+    UpdateMemberRoleRequest:
+      properties:
+        role_key:
+          description: New role to assign (owner/admin/member/viewer)
+          title: Role Key
+          type: string
+      required:
+      - role_key
+      title: UpdateMemberRoleRequest
       type: object
   securitySchemes:
     bearerAuth:
