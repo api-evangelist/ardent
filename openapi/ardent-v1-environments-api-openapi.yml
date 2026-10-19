@@ -1,0 +1,475 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Environments API
+  version: 0.1.0
+tags:
+- name: v1-environments
+paths:
+  /v1/environments/aws-setup-link:
+    post:
+      tags:
+      - v1-environments
+      summary: Create Aws Setup Link Endpoint
+      operationId: create_aws_setup_link_endpoint_v1_environments_aws_setup_link_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAwsSetupLinkRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/aws-account-connections/{aws_account_connection_id}:
+    patch:
+      tags:
+      - v1-environments
+      summary: Confirm Aws Account Connection Endpoint
+      operationId: confirm_aws_account_connection_endpoint_v1_environments_aws_account_connections__aws_account_connection_id__patch
+      parameters:
+      - name: aws_account_connection_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Aws Account Connection Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmAwsAccountConnectionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments:
+    get:
+      tags:
+      - v1-environments
+      summary: List Environments Endpoint
+      operationId: list_environments_endpoint_v1_environments_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+      - v1-environments
+      summary: Create Environment Endpoint
+      operationId: create_environment_endpoint_v1_environments_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEnvironmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/{environment_id}/neon-api-key:
+    post:
+      tags:
+      - v1-environments
+      summary: Rotate Environment Neon Api Key Endpoint
+      operationId: rotate_environment_neon_api_key_endpoint_v1_environments__environment_id__neon_api_key_post
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RotateNeonApiKeyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/aws-account-connections:
+    get:
+      tags:
+      - v1-environments
+      summary: List Aws Account Connections Endpoint
+      operationId: list_aws_account_connections_endpoint_v1_environments_aws_account_connections_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/environments/{environment_id}/redeploy:
+    post:
+      tags:
+      - v1-environments
+      summary: Redeploy Environment Endpoint
+      operationId: redeploy_environment_endpoint_v1_environments__environment_id__redeploy_post
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/{environment_id}:
+    get:
+      tags:
+      - v1-environments
+      summary: Get Environment Endpoint
+      operationId: get_environment_endpoint_v1_environments__environment_id__get
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - v1-environments
+      summary: Delete Environment Endpoint
+      operationId: delete_environment_endpoint_v1_environments__environment_id__delete
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/{environment_id}/private-link-template:
+    get:
+      tags:
+      - v1-environments
+      summary: Get Private Link Template Endpoint
+      operationId: get_private_link_template_endpoint_v1_environments__environment_id__private_link_template_get
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/{environment_id}/private-links:
+    get:
+      tags:
+      - v1-environments
+      summary: List Private Links Endpoint
+      operationId: list_private_links_endpoint_v1_environments__environment_id__private_links_get
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - v1-environments
+      summary: Create Private Link Endpoint
+      operationId: create_private_link_endpoint_v1_environments__environment_id__private_links_post
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePrivateLinkRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/environments/{environment_id}/private-links/{private_link_id}:
+    delete:
+      tags:
+      - v1-environments
+      summary: Delete Private Link Endpoint
+      operationId: delete_private_link_endpoint_v1_environments__environment_id__private_links__private_link_id__delete
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      - name: private_link_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Private Link Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CreateAwsSetupLinkRequest:
+      properties:
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Org Id
+      type: object
+      title: CreateAwsSetupLinkRequest
+    CreatePrivateLinkRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 64
+          minLength: 3
+          pattern: ^[a-z0-9][a-z0-9-]*[a-z0-9]$
+          title: Name
+        resource_configuration_arn:
+          type: string
+          pattern: ^arn:aws:vpc-lattice:[a-z0-9-]+:[0-9]{12}:resourceconfiguration/rcfg-[0-9a-z]+$
+          title: Resource Configuration Arn
+        resource_share_arn:
+          type: string
+          pattern: ^arn:aws:ram:[a-z0-9-]+:[0-9]{12}:resource-share/[0-9a-f-]+$
+          title: Resource Share Arn
+        database_port:
+          type: integer
+          maximum: 65535.0
+          minimum: 1.0
+          title: Database Port
+          default: 5432
+      type: object
+      required:
+      - name
+      - resource_configuration_arn
+      - resource_share_arn
+      title: CreatePrivateLinkRequest
+    CreateEnvironmentRequest:
+      properties:
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Org Id
+        ownership_type:
+          type: string
+          pattern: ^(customer_owned)$
+          title: Ownership Type
+        provider:
+          type: string
+          pattern: ^(aws|gcp|azure)$
+          title: Provider
+        region:
+          type: string
+          title: Region
+        credentials:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Credentials
+        neon_api_key:
+          type: string
+          minLength: 1
+          title: Neon Api Key
+        aws_account_connection_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Aws Account Connection Id
+        tier:
+          type: string
+          pattern: ^(small|medium|large)$
+          title: Tier
+          default: small
+      type: object
+      required:
+      - ownership_type
+      - provider
+      - region
+      - neon_api_key
+      title: CreateEnvironmentRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ConfirmAwsAccountConnectionRequest:
+      properties:
+        org_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Org Id
+        role_arn:
+          type: string
+          minLength: 1
+          title: Role Arn
+        region:
+          type: string
+          minLength: 1
+          title: Region
+          default: us-east-1
+      type: object
+      required:
+      - role_arn
+      title: ConfirmAwsAccountConnectionRequest
+    RotateNeonApiKeyRequest:
+      properties:
+        neon_api_key:
+          type: string
+          minLength: 1
+          title: Neon Api Key
+      type: object
+      required:
+      - neon_api_key
+      title: RotateNeonApiKeyRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

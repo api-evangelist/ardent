@@ -1,0 +1,1076 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Internal API
+  version: 0.1.0
+tags:
+- name: v1-internal
+paths:
+  /v1/internal/neon/orphan-projects:
+    get:
+      tags:
+      - v1-internal
+      summary: List Orphan Neon Projects Route
+      description: 'Admin-only: list currently classified orphan Ardent-managed Neon projects.'
+      operationId: list_orphan_neon_projects_route_v1_internal_neon_orphan_projects_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Orphan Neon Projects Route V1 Internal Neon Orphan Projects Get
+  /v1/internal/neon/orphan-projects/reclaim:
+    post:
+      tags:
+      - v1-internal
+      summary: Reclaim Orphan Neon Projects Route
+      description: 'Admin-only: delete explicitly requested orphan Neon projects with audit.'
+      operationId: reclaim_orphan_neon_projects_route_v1_internal_neon_orphan_projects_reclaim_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrphanNeonProjectReclaimRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Reclaim Orphan Neon Projects Route V1 Internal Neon Orphan Projects Reclaim Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/recover-engine-setup:
+    post:
+      tags:
+      - v1-internal
+      summary: Recover Engine Setup Route
+      description: 'Admin-only: replace a stale active connector engine-setup operation.
+
+
+        This is the audited manual lever for strands where the customer retry
+
+        endpoint must keep reusing the active async_operation, but DBOS no longer
+
+        has a worker-executing workflow for that operation.'
+      operationId: recover_engine_setup_route_v1_internal_connectors__connector_id__recover_engine_setup_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecoverEngineSetupRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/reset:
+    post:
+      tags:
+      - v1-internal
+      summary: Reset Connector Route
+      description: 'Admin-only: dispatch a connector reset as an async operation.
+
+
+        Returns 202 with an operation_id; the actual reset (drop pgstream,
+
+        re-snapshot Neon main, re-deploy CDC) routinely runs several
+
+        minutes and would otherwise blow the ALB 60s idle timeout. The
+
+        caller polls GET /v1/operations/{id} for stage transitions and the
+
+        terminal outcome (ARD-741).
+
+
+        Branches and Neon project survive the reset by design — see
+
+        reset_connector for the safety contract.
+
+
+        Args:
+
+        force: When true, bypass the in-flight WAL/Kafka drain wait
+
+        inside the pgstream teardown step (ARD-870). Operator accepts
+
+        that any un-replicated data is abandoned.'
+      operationId: reset_connector_route_v1_internal_connectors__connector_id__reset_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: force
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Force
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/reconcile-pgstream-deployments:
+    post:
+      tags:
+      - v1-internal
+      summary: Reconcile Pgstream Deployments Route
+      description: 'Admin-only: reconcile connector pgstream state from live Kubernetes.'
+      operationId: reconcile_pgstream_deployments_route_v1_internal_connectors__connector_id__reconcile_pgstream_deployments_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Reconcile Pgstream Deployments Route V1 Internal Connectors  Connector Id  Reconcile Pgstream Deployments Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/reconcile-pgstream-relax-fk-env:
+    post:
+      tags:
+      - v1-internal
+      summary: Reconcile Pgstream Relax Fk Env Route
+      description: 'Admin-only: reconcile live pgstream writer FK-relaxation env from config.'
+      operationId: reconcile_pgstream_relax_fk_env_route_v1_internal_connectors__connector_id__reconcile_pgstream_relax_fk_env_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: allow_active_restart
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Allow Active Restart
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Reconcile Pgstream Relax Fk Env Route V1 Internal Connectors  Connector Id  Reconcile Pgstream Relax Fk Env Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/branches/{branch_id}/mark-masked-ready:
+    post:
+      tags:
+      - v1-internal
+      summary: Mark Branch Masked Ready Route
+      description: 'Admin-only: release a branch hook-readiness gate with durable audit.'
+      operationId: mark_branch_masked_ready_route_v1_internal_branches__branch_id__mark_masked_ready_post
+      parameters:
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Branch Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkBranchMaskedReadyRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Mark Branch Masked Ready Route V1 Internal Branches  Branch Id  Mark Masked Ready Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/deep-reset:
+    post:
+      tags:
+      - v1-internal
+      summary: Deep Reset Connector Route
+      description: 'Admin-only: dispatch a per-source-DB connector deep reset (ARD-1273).
+
+
+        Rebuilds ONE source DB''s pgstream pipeline (delete pgstream -> wipe its
+
+        branch target schemas -> redeploy -> validate) without disturbing the
+
+        connector''s other source DBs. Returns 202 with an operation_id; the caller
+
+        polls GET /v1/operations/{id}. The destructive work runs on the DBOS byoc
+
+        queue, not on this request-serving pod.
+
+
+        Refuses with 400 when ``source_db`` is unknown (not a deployed, selected
+
+        database). Coalescing is connector-scoped: the operation resource_id is the
+
+        connector id and the requested ``source_db`` is stored in ``result``. A
+
+        second deep reset of the same source DB reuses the in-flight operation; a
+
+        different source DB on the same connector returns 409 because connector
+
+        status and engine_config are connector-level state.'
+      operationId: deep_reset_connector_route_v1_internal_connectors__connector_id__deep_reset_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: source_db
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Source Db
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-shadow-compare:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Shadow Compare Connector Route
+      description: 'Admin-only: dispatch shadow parity compare and isolated-target apply.'
+      operationId: debezium_shadow_compare_connector_route_v1_internal_connectors__connector_id__debezium_shadow_compare_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumShadowCompareRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-shadow-cleanup:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Shadow Cleanup Connector Route
+      description: 'Admin-only: dispatch Debezium shadow cleanup without touching pgstream.'
+      operationId: debezium_shadow_cleanup_connector_route_v1_internal_connectors__connector_id__debezium_shadow_cleanup_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumShadowCleanupRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-cutover:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Cutover Connector Route
+      description: 'Admin-only: dispatch a DBOS-backed replication cutover operation.'
+      operationId: debezium_cutover_connector_route_v1_internal_connectors__connector_id__debezium_cutover_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumCutoverRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-rollback:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Rollback Connector Route
+      description: 'Admin-only: dispatch a DBOS-backed replication rollback operation.'
+      operationId: debezium_rollback_connector_route_v1_internal_connectors__connector_id__debezium_rollback_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumRollbackRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-post-cutover-reconciliation:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Post Cutover Reconciliation Route
+      description: 'Admin-only: run exact source/target reconciliation after cutover.'
+      operationId: debezium_post_cutover_reconciliation_route_v1_internal_connectors__connector_id__debezium_post_cutover_reconciliation_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumPostCutoverReconciliationRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-repair:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Repair Route
+      description: 'Admin-only: run a synchronous Debezium repair action with audit.'
+      operationId: debezium_repair_route_v1_internal_connectors__connector_id__debezium_repair_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumRepairRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-migration/timeline:
+    get:
+      tags:
+      - v1-internal
+      summary: Debezium Migration Timeline Route
+      description: 'Admin-only: return a connector''s Debezium migration event timeline.'
+      operationId: debezium_migration_timeline_route_v1_internal_connectors__connector_id__debezium_migration_timeline_get
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: source_database
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Database
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Debezium Migration Timeline Route V1 Internal Connectors  Connector Id  Debezium Migration Timeline Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-migration/open-intents:
+    get:
+      tags:
+      - v1-internal
+      summary: Debezium Migration Open Intents Route
+      description: 'Admin-only: inspect currently open Debezium migration intents.'
+      operationId: debezium_migration_open_intents_route_v1_internal_connectors__connector_id__debezium_migration_open_intents_get
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: source_database
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Database
+      - name: expired_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Expired Only
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Debezium Migration Open Intents Route V1 Internal Connectors  Connector Id  Debezium Migration Open Intents Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/debezium-migration/reconcile:
+    post:
+      tags:
+      - v1-internal
+      summary: Debezium Migration Reconcile Route
+      description: 'Admin-only: reconcile expired open Debezium migration intents.'
+      operationId: debezium_migration_reconcile_route_v1_internal_connectors__connector_id__debezium_migration_reconcile_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebeziumMigrationReconcileRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Debezium Migration Reconcile Route V1 Internal Connectors  Connector Id  Debezium Migration Reconcile Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/rollout:
+    post:
+      tags:
+      - v1-internal
+      summary: Rollout Connector Route
+      description: 'Admin-only: dispatch a DBOS-backed connector rollout operation.'
+      operationId: rollout_connector_route_v1_internal_connectors__connector_id__rollout_post
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorRolloutRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/environments/{environment_id}/redeploy:
+    post:
+      tags:
+      - v1-internal
+      summary: Redeploy Environment Route
+      description: 'Admin-only: re-drive a BYOC environment deploy.
+
+
+        `environment_deploy` now runs as a DBOS durable workflow
+
+        (`run_environment_deploy`, `environment_deploy.v1`). A backend rollout or
+
+        worker crash mid-deploy no longer fails the deploy — DBOS resumes it from
+
+        the last completed step on the next worker — and the legacy reaper no
+
+        longer governs deploy operations (it skips `runtime=''dbos''` rows). So this
+
+        route is a manual re-drive for the residual cases the automatic path does
+
+        not cover: a genuinely terminal failure, or a deploy whose workflow died
+
+        after reaching a terminal error (e.g. the success write exhausted its
+
+        retries, leaving the environment stuck `provisioning` with a terminal
+
+        operation that nothing else re-drives). Because every deploy step is
+
+        idempotent, customer-triggered retries are now safe too.
+
+
+        Everything the workflow needs is already persisted: the `environments`
+
+        row, its `environment_resources` rows, and the AKV-referenced
+
+        `external_id` / `neon_api_key`. It re-reads all of it from `environment_id`
+
+        alone, so an operator can re-drive a stuck deploy with no customer
+
+        involvement.
+
+
+        Behavior by current status:
+
+        * `failed` — claim a fresh deploy (flip to `provisioning`, enqueue).
+
+        * `pending` / `provisioning` — if a deploy workflow is genuinely live,
+
+        return its operation unchanged; otherwise the prior operation stranded,
+
+        so terminalize it and enqueue a fresh one (the environment is already
+
+        `provisioning`).
+
+        * anything else — 409.
+
+
+        Returns 202 with an operation_id; an EKS environment deploy routinely runs
+
+        ~25 minutes and would otherwise blow the ALB 60s idle timeout. The caller
+
+        polls GET /v1/operations/{id} for stage transitions and the terminal
+
+        outcome.'
+      operationId: redeploy_environment_route_v1_internal_environments__environment_id__redeploy_post
+      parameters:
+      - name: environment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Environment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DebeziumRollbackRequest:
+      properties:
+        source_database:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Source Database
+        reason:
+          type: string
+          maxLength: 64
+          minLength: 1
+          title: Reason
+        evidence_source:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Evidence Source
+        evidence_reference_id:
+          type: string
+          maxLength: 256
+          minLength: 1
+          title: Evidence Reference Id
+        evidence_observed_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Evidence Observed At
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+        intent_ttl_seconds:
+          type: integer
+          maximum: 3600.0
+          minimum: 60.0
+          title: Intent Ttl Seconds
+          default: 900
+      type: object
+      required:
+      - source_database
+      - reason
+      - evidence_source
+      - evidence_reference_id
+      title: DebeziumRollbackRequest
+      description: Request body for staff-triggered replication rollback.
+    DebeziumMigrationReconcileRequest:
+      properties:
+        source_database:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 1
+          - type: 'null'
+          title: Source Database
+        limit:
+          type: integer
+          maximum: 500.0
+          minimum: 1.0
+          title: Limit
+          default: 50
+      type: object
+      title: DebeziumMigrationReconcileRequest
+      description: Request body for staff-triggered migration-intent reconciliation.
+    DebeziumCutoverRequest:
+      properties:
+        source_database:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Source Database
+      type: object
+      required:
+      - source_database
+      title: DebeziumCutoverRequest
+      description: Request body for staff-triggered replication cutover.
+    ConnectorRolloutRequest:
+      properties:
+        rollout_unit:
+          type: string
+          enum:
+          - pgstream_image
+          - data_plane_chart
+          title: Rollout Unit
+        pgstream_source_image:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Pgstream Source Image
+        pgstream_target_digest:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Pgstream Target Digest
+        data_plane_chart_sha256:
+          anyOf:
+          - type: string
+            minLength: 1
+          - type: 'null'
+          title: Data Plane Chart Sha256
+        requires_drain:
+          type: boolean
+          title: Requires Drain
+          default: true
+      type: object
+      required:
+      - rollout_unit
+      title: ConnectorRolloutRequest
+      description: Request body for staff-triggered connector rollouts.
+    DebeziumShadowCleanupRequest:
+      properties:
+        reason:
+          type: string
+          maxLength: 256
+          minLength: 1
+          title: Reason
+        source_databases:
+          anyOf:
+          - items:
+              type: string
+            type: array
+            maxItems: 100
+            minItems: 1
+          - type: 'null'
+          title: Source Databases
+      type: object
+      required:
+      - reason
+      title: DebeziumShadowCleanupRequest
+      description: Request body for staff-triggered Debezium-only shadow cleanup.
+    OrphanNeonProjectReclaimRequest:
+      properties:
+        project_ids:
+          items:
+            type: string
+          type: array
+          maxItems: 10
+          minItems: 1
+          title: Project Ids
+        confirm:
+          type: string
+          title: Confirm
+      type: object
+      required:
+      - project_ids
+      - confirm
+      title: OrphanNeonProjectReclaimRequest
+      description: Request body for staff-triggered orphan Neon project reclaim.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DebeziumPostCutoverReconciliationRequest:
+      properties:
+        source_database:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Source Database
+        run_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+            minLength: 1
+          - type: 'null'
+          title: Run Id
+        timeout_seconds:
+          type: number
+          maximum: 1800.0
+          minimum: 30.0
+          title: Timeout Seconds
+          default: 300.0
+        tables:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/DebeziumTableRequest'
+            type: array
+            maxItems: 500
+            minItems: 1
+          - type: 'null'
+          title: Tables
+      type: object
+      required:
+      - source_database
+      title: DebeziumPostCutoverReconciliationRequest
+      description: Request body for exact post-cutover source/target reconciliation.
+    MarkBranchMaskedReadyRequest:
+      properties:
+        reason:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Reason
+        confirm_safe_to_route:
+          type: boolean
+          title: Confirm Safe To Route
+      type: object
+      required:
+      - reason
+      - confirm_safe_to_route
+      title: MarkBranchMaskedReadyRequest
+      description: Request body for staff-triggered hook-readiness recovery.
+    RecoverEngineSetupRequest:
+      properties:
+        reason:
+          type: string
+          maxLength: 256
+          minLength: 1
+          title: Reason
+      type: object
+      required:
+      - reason
+      title: RecoverEngineSetupRequest
+      description: Request body for staff-triggered stale engine-setup recovery.
+    DebeziumTableRequest:
+      properties:
+        schema:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Schema
+        table:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Table
+      type: object
+      required:
+      - schema
+      - table
+      title: DebeziumTableRequest
+      description: One source table identifier for staff Debezium tools.
+    DebeziumRepairRequest:
+      properties:
+        source_database:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Source Database
+        repair_action:
+          type: string
+          enum:
+          - restart_connector
+          - resnapshot_table
+          - repair_slot_publication
+          title: Repair Action
+        table:
+          anyOf:
+          - $ref: '#/components/schemas/DebeziumTableRequest'
+          - type: 'null'
+        snapshot_type:
+          type: string
+          enum:
+          - incremental
+          - blocking
+          title: Snapshot Type
+          default: incremental
+        signal_id:
+          anyOf:
+          - type: string
+            maxLength: 42
+            minLength: 1
+          - type: 'null'
+          title: Signal Id
+      type: object
+      required:
+      - source_database
+      - repair_action
+      title: DebeziumRepairRequest
+      description: Request body for synchronous Debezium operator repair actions.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DebeziumShadowCompareRequest:
+      properties:
+        source_database:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Source Database
+        run_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Run Id
+        selected_entities_fingerprint:
+          type: string
+          maxLength: 256
+          minLength: 1
+          title: Selected Entities Fingerprint
+        window_start_lsn:
+          type: string
+          maxLength: 32
+          minLength: 3
+          title: Window Start Lsn
+        window_end_lsn:
+          type: string
+          maxLength: 32
+          minLength: 3
+          title: Window End Lsn
+      type: object
+      required:
+      - source_database
+      - run_id
+      - selected_entities_fingerprint
+      - window_start_lsn
+      - window_end_lsn
+      title: DebeziumShadowCompareRequest
+      description: Request body for staff-triggered shadow compare reservation.

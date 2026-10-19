@@ -1,0 +1,320 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Policies API
+  version: 0.1.0
+tags:
+- name: v1-policies
+paths:
+  /v1/policies:
+    post:
+      tags:
+      - v1-policies
+      summary: Create Policy Endpoint
+      description: 'Create a new policy for an org. If assign_to_scope is provided, also
+
+        create the assignment in the same request and roll the policy back if
+
+        assignment fails — CLI settings set uses this to avoid orphan policies.
+
+
+        assign_to_scope shape: {"scope_type": "connectors"|"orgs"|"branches",
+
+        "scope_id": "...", "priority": 100 (optional)}. Omit priority on
+
+        branch_create_hook assignments to auto-append after existing hooks in the
+
+        same scope using HOOK_PRIORITY_GAP.'
+      operationId: create_policy_endpoint_v1_policies_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    get:
+      tags:
+      - v1-policies
+      summary: List Policies Endpoint
+      description: 'List policies for an org. If connector_id is given, return only policies
+
+        that have a connector-scoped assignment to that connector — used by the
+
+        CLI settings commands to avoid an N+1 walk over every policy.'
+      operationId: list_policies_endpoint_v1_policies_get
+      parameters:
+      - name: org_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Org Id
+      - name: connector_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Connector Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/policies/{policy_id}:
+    get:
+      tags:
+      - v1-policies
+      summary: Get Policy Endpoint
+      description: Get a single policy by ID.
+      operationId: get_policy_endpoint_v1_policies__policy_id__get
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Policy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - v1-policies
+      summary: Update Policy Endpoint
+      description: Update a policy's name/config and optionally one assignment's run order.
+      operationId: update_policy_endpoint_v1_policies__policy_id__patch
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Policy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - v1-policies
+      summary: Delete Policy Endpoint
+      description: Delete a policy. Cascades to all its assignments.
+      operationId: delete_policy_endpoint_v1_policies__policy_id__delete
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Policy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/policies/{policy_id}/assignments:
+    post:
+      tags:
+      - v1-policies
+      summary: Create Assignment Endpoint
+      description: Assign a policy to a scope (org, connector, or branch).
+      operationId: create_assignment_endpoint_v1_policies__policy_id__assignments_post
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Policy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - v1-policies
+      summary: List Assignments Endpoint
+      description: List all scope assignments for a policy.
+      operationId: list_assignments_endpoint_v1_policies__policy_id__assignments_get
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Policy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - v1-policies
+      summary: Update Assignment Endpoint
+      description: 'Update an existing assignment''s run-order priority for one scope.
+
+
+        The CLI calls this when ``settings set branch_sql --order`` changes the run
+
+        order of a hook that already exists (the policy PATCH only touches config).
+
+        Scope is named in the body via (scope_type, scope_id) so a policy assigned
+
+        to several scopes stays individually addressable.'
+      operationId: update_assignment_endpoint_v1_policies__policy_id__assignments_patch
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Policy Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/policy_assignments/{assignment_id}:
+    delete:
+      tags:
+      - v1-policies
+      summary: Delete Assignment Endpoint
+      description: Remove a policy assignment.
+      operationId: delete_assignment_endpoint_v1_policy_assignments__assignment_id__delete
+      parameters:
+      - name: assignment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Assignment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/branches/{branch_id}/policy_log:
+    get:
+      tags:
+      - v1-policies
+      summary: Get Branch Policy Log Endpoint
+      description: Get policy execution log for a branch.
+      operationId: get_branch_policy_log_endpoint_v1_branches__branch_id__policy_log_get
+      parameters:
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Branch Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

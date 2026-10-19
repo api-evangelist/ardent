@@ -1,0 +1,29 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 System API
+  version: 0.1.0
+tags:
+- name: v1-system
+paths:
+  /v1/system/git-info:
+    get:
+      tags:
+      - v1-system
+      summary: Get Git Branch
+      description: 'Get the current git branch name for the repository.
+
+
+        Returns:
+
+        JSONResponse containing:
+
+        - branch: Current git branch name
+
+        - error: Any error that occurred (if any)'
+      operationId: get_git_branch_v1_system_git_info_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}

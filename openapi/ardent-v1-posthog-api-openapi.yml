@@ -1,0 +1,20 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Posthog API
+  version: 0.1.0
+tags:
+- name: v1-posthog
+paths:
+  /v1/posthog/event:
+    post:
+      tags:
+      - v1-posthog
+      summary: Add User Action
+      description: Accept a list of telemetry events and forward each to PostHog.
+      operationId: add_user_action_v1_posthog_event_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}

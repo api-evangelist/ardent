@@ -1,0 +1,496 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Internal Health API
+  version: 0.1.0
+tags:
+- name: v1-internal-health
+paths:
+  /v1/internal/connectors/health:
+    get:
+      tags:
+      - v1-internal-health
+      summary: List Connectors Health Endpoint
+      description: 'List connector health state rows with filters.
+
+
+        Each query parameter that accepts multiple values (status, cluster_name,
+
+        org_id) AND-combines across distinct keys but OR-combines (IN) within
+
+        one key. Example query string:
+
+
+        ?status=crashing&status=wal_slot_held_by_stale_walsender&cluster_name=ardent-aws-prod-eks
+
+
+        returns rows where status ∈ {crashing, wal_slot_held_by_stale_walsender}
+
+        AND cluster_name = ardent-aws-prod-eks.'
+      operationId: list_connectors_health_endpoint_v1_internal_connectors_health_get
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          title: Status
+      - name: cluster_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          title: Cluster Name
+      - name: org_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: array
+            items:
+              type: string
+          - type: 'null'
+          title: Org Id
+      - name: search
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Search
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Connectors Health Endpoint V1 Internal Connectors Health Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/health/coverage:
+    get:
+      tags:
+      - v1-internal-health
+      summary: List Connector Health Coverage Endpoint
+      description: 'Fleet view of streaming connectors with absent or stale health rows.
+
+
+        The inverse of the list view above: instead of the health rows that exist,
+
+        this returns the connectors in a live apply state whose declared pgstream
+
+        deployments have no fresh ``connector_health_state`` row — the silent gap
+
+        where a connector reads healthy by absence of evidence (ARD-1247). ``missing``
+
+        gaps sort ahead of ``stale`` ones. Same verdict the Honeycomb coverage
+
+        triggers page on, served on demand for the operator console.'
+      operationId: list_connector_health_coverage_endpoint_v1_internal_connectors_health_coverage_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Connector Health Coverage Endpoint V1 Internal Connectors Health Coverage Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/health/unreconciled-pgstream:
+    get:
+      tags:
+      - v1-internal-health
+      summary: List Unreconciled Pgstream Deployments Endpoint
+      description: 'List setup-state connectors that have live K8s pgstream deployments
+
+        but no persisted ``engine_config.pgstream_deployments`` entry.
+
+
+        This is the ARD-1430 operator view: health-row coverage cannot see a
+
+        Deployment whose name was never stored on the connector, so this endpoint
+
+        asks Kubernetes directly for bounded pages of setup-state connectors.
+
+        Pagination is over the connector page; ``unreconciled_count`` is the
+
+        filtered row count within that page.'
+      operationId: list_unreconciled_pgstream_deployments_endpoint_v1_internal_connectors_health_unreconciled_pgstream_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Unreconciled Pgstream Deployments Endpoint V1 Internal Connectors Health Unreconciled Pgstream Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/health/{connector_id}:
+    get:
+      tags:
+      - v1-internal-health
+      summary: Get Connector Health Endpoint
+      description: 'Drill-down view: every deployment for one connector + recent events.
+
+
+        When the connector has health rows, returns them plus the current coverage
+
+        verdict so stale/superseded rows cannot mask a missing current deployment.
+
+        When it has none, we no longer collapse straight to 404 (ARD-1247): if the
+
+        connector exists AND is in a live apply state, it is EXPECTED to be observed,
+
+        so we return an explicit ``not_observed`` payload (200) instead. Only a
+
+        connector that does not exist, or is not in a streaming state (no coverage
+
+        story to tell), still 404s.'
+      operationId: get_connector_health_endpoint_v1_internal_connectors_health__connector_id__get
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Connector Health Endpoint V1 Internal Connectors Health  Connector Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/quarantine/{quarantine_id}/release:
+    post:
+      tags:
+      - v1-internal-health
+      summary: Release Connector Quarantine Endpoint
+      description: 'Staff-gated release for a quarantined pgstream Deployment.
+
+
+        Mirrors POST /v1/connectors/{cid}/quarantine/{qid}/release but lives under
+
+        /internal/* so the connectors-health drilldown UI can release a quarantine
+
+        without requiring its operator to also hold ``connectors.update`` on the
+
+        customer''s connector. Staff don''t carry org membership for customer orgs;
+
+        the per-connector check on the public endpoint would 403 them on every
+
+        customer they''re paged for.
+
+
+        Authorization: ``verify_staff_auth`` (is_ardent_staff = TRUE) only.
+
+        Audit: ``released_by`` is set to the staff user_id, identical to the
+
+        public endpoint, so the quarantine row''s audit trail is preserved.
+
+        Idempotent — already-released rows return the current state via
+
+        ``mark_quarantine_released``''s fallback path.'
+      operationId: release_connector_quarantine_endpoint_v1_internal_connectors_quarantine__quarantine_id__release_post
+      parameters:
+      - name: quarantine_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Quarantine Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Release Connector Quarantine Endpoint V1 Internal Connectors Quarantine  Quarantine Id  Release Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/readiness-checks:
+    get:
+      tags:
+      - v1-internal-health
+      summary: List Internal Readiness Checks Endpoint
+      description: 'Operator drill-down on the ARD-720 post-snapshot validation paper trail.
+
+
+        Returns one row per (attempt_id, check_name, subject) — the
+
+        append-only evidence written by the engine-setup gate. Operators use
+
+        this to answer "why is this connector in failed_validation" without
+
+        needing SQL access.
+
+
+        Filters:
+
+        - ``attempt_id`` narrows to one engine-setup attempt (latest first by
+
+        default — combine with the rollup view below to find the right id).
+
+        - ``check_name`` narrows to a single validator family, such as
+
+        ``row_count``, ``snapshot_completion``, ``domain_presence``,
+
+        ``table_presence``, ``column_shape``, ``pk_presence``,
+
+        ``unique_identity_presence``, ``fk_validity``, ``fk_presence``,
+
+        ``policy_presence``, ``infra_signal``, or ``unlogged_table_skipped``.
+
+        - ``only_failed`` shows just the rows that drove the
+
+        ``failed_validation`` verdict — the operator''s primary view when
+
+        paged.
+
+
+        Note: ``policy_presence`` rows with ``observed.present=false`` are
+
+        informational by default and can appear on a ``healthy`` connector, so
+
+        do not combine that drill-down with ``only_failed=true`` unless the
+
+        connector opted into strict replicated-policy gating.'
+      operationId: list_internal_readiness_checks_endpoint_v1_internal_connectors__connector_id__readiness_checks_get
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: attempt_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Attempt Id
+      - name: check_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Check Name
+      - name: only_failed
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Only Failed
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 5000
+          minimum: 1
+          default: 500
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Internal Readiness Checks Endpoint V1 Internal Connectors  Connector Id  Readiness Checks Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/internal/connectors/{connector_id}/readiness-attempts:
+    get:
+      tags:
+      - v1-internal-health
+      summary: List Internal Readiness Attempts Endpoint
+      description: 'Roll up branch_readiness_checks into one summary per attempt.
+
+
+        Operators land here first to see "this connector has run engine-setup
+
+        N times, here''s the pass/fail count for each", then drill into the
+
+        per-row evidence via the readiness-checks endpoint above.'
+      operationId: list_internal_readiness_attempts_endpoint_v1_internal_connectors__connector_id__readiness_attempts_get
+      parameters:
+      - name: connector_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Connector Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 5000
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Internal Readiness Attempts Endpoint V1 Internal Connectors  Connector Id  Readiness Attempts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

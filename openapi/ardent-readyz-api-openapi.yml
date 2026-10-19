@@ -1,0 +1,33 @@
+openapi: 3.2.0
+info:
+  title: Fast Readyz API
+  version: 0.1.0
+tags:
+- name: Readyz
+paths:
+  /readyz:
+    get:
+      summary: Readyz
+      description: 'Dependency readiness — wired to k8s readinessProbe.
+
+
+        Runs the checks in `gather_readiness_checks`. A failing gating check
+
+        returns 503 with a JSON body listing every check; K8s pulls the pod out of
+
+        the load balancer so callers see 503 immediately rather than waiting on a
+
+        backend that can''t actually serve them. This endpoint makes no
+
+        third-party vendor API call; see `GATING_READINESS_CHECKS` in
+
+        `app/health.py` for what it checks and why.'
+      operationId: readyz_readyz_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Readyz

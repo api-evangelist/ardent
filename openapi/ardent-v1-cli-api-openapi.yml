@@ -1,0 +1,493 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Cli API
+  version: 0.1.0
+tags:
+- name: v1-cli
+paths:
+  /v1/cli/auth/init:
+    post:
+      tags:
+      - v1-cli
+      summary: Cli Auth Init
+      description: 'Initialize a CLI auth session.
+
+
+        Called by CLI before opening browser. Creates a pending session
+
+        that will be completed after OAuth.
+
+
+        Returns:
+
+        session_id: Unique session identifier for polling
+
+        auth_url: URL to open in browser (goes directly to OAuth)'
+      operationId: cli_auth_init_v1_cli_auth_init_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/cli/auth/poll:
+    get:
+      tags:
+      - v1-cli
+      summary: Cli Auth Poll
+      description: 'Poll for CLI auth completion.
+
+
+        Called by CLI repeatedly until status is ''completed''.
+
+
+        Args:
+
+        session: Session ID from /init
+
+
+        Returns:
+
+        status: ''pending'' | ''completed'' | ''expired''
+
+        token: API key (only when completed)'
+      operationId: cli_auth_poll_v1_cli_auth_poll_get
+      parameters:
+      - name: session
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Session
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cli/auth/complete:
+    post:
+      tags:
+      - v1-cli
+      summary: Cli Auth Complete
+      description: 'Complete CLI auth after OAuth.
+
+
+        Called by frontend after successful OAuth. Creates an API key
+
+        and updates the session so CLI can retrieve it.
+
+
+        Handles new users by auto-creating a personal org.
+
+
+        Requires: Authenticated user (Supabase JWT)
+
+
+        Body:
+
+        session_id: Session ID from CLI'
+      operationId: cli_auth_complete_v1_cli_auth_complete_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/cli/auth/select-org:
+    post:
+      tags:
+      - v1-cli
+      summary: Cli Auth Select Org
+      description: 'Complete CLI auth with a selected org (for multi-org users).
+
+
+        Called after cli_auth_complete returns needs_org_selection.
+
+
+        Body:
+
+        session_id: The CLI auth session ID
+
+        org_id: The selected organization ID
+
+
+        Returns:
+
+        status: "completed"'
+      operationId: cli_auth_select_org_v1_cli_auth_select_org_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CLIAuthSelectOrgRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cli/me:
+    get:
+      tags:
+      - v1-cli
+      summary: Cli Get Me
+      description: 'Get current user profile for CLI status display.
+
+
+        Returns user info (name, email) and org info for the authenticated API key.'
+      operationId: cli_get_me_v1_cli_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/cli/connectors:
+    get:
+      tags:
+      - v1-cli
+      summary: Cli List Connectors
+      description: 'List connectors for CLI user.
+
+
+        Returns connectors for the authenticated user''s org.
+
+        If project_id is provided, filters to connectors in that project.'
+      operationId: cli_list_connectors_v1_cli_connectors_get
+      parameters:
+      - name: project_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Project Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cli/branches:
+    get:
+      tags:
+      - v1-cli
+      summary: Cli List Branches
+      description: 'List branches for CLI user''s current connector.
+
+
+        connector_id is required — scopes branches to a specific connector.
+
+        reveal_urls includes full connection URLs in the bulk response; hidden by default.'
+      operationId: cli_list_branches_v1_cli_branches_get
+      parameters:
+      - name: connector_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Connector Id
+      - name: branch_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch Id
+      - name: branch_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Branch Name
+      - name: reveal_urls
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Reveal Urls
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cli/branches/{branch_id}:
+    delete:
+      tags:
+      - v1-cli
+      summary: Cli Delete Branch
+      description: 'Delete a branch asynchronously (ARD-1453), in parity with branch create.
+
+
+        Returns 202 + an operation handle; the CLI polls
+
+        ``GET /v1/operations/{operation_id}`` for staged progress and the terminal
+
+        outcome. The teardown runs in the ``branch_delete.v1`` DBOS durable workflow
+
+        (mark deleting -> external cleanup -> finalize), so a crash mid-teardown is
+
+        recovered by DBOS rather than stranding the row in ``deleting`` with no
+
+        retry driver. Audit ordering and the partial-cleanup terminal-failed
+
+        semantics are preserved inside the workflow.
+
+
+        Idempotency:
+
+        * A concurrent or retried delete of the same branch coalesces onto the
+
+        active operation via the ``(type, resource_id)`` partial unique index —
+
+        no second workflow is enqueued.
+
+        * A re-delete of an already-gone branch polls the prior delete operation
+
+        to completion (clean no-op) instead of 404ing.'
+      operationId: cli_delete_branch_v1_cli_branches__branch_id__delete
+      parameters:
+      - name: branch_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Branch Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cli/invite:
+    post:
+      tags:
+      - v1-cli
+      summary: Cli Invite User
+      description: 'Invite a user to the organization via CLI.
+
+
+        Uses API key auth to determine org_id.
+
+        Sends invite email via Supabase.
+
+
+        Body:
+
+        email: Email address to invite
+
+        role: Role to assign (owner/admin/member/viewer), defaults to "member"
+
+
+        Returns:
+
+        success: True if invite sent
+
+        email: The invited email
+
+        role: The role they''ll receive'
+      operationId: cli_invite_user_v1_cli_invite_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/cli/invites:
+    get:
+      tags:
+      - v1-cli
+      summary: Cli List Invites
+      description: List pending invites for the organization.
+      operationId: cli_list_invites_v1_cli_invites_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    delete:
+      tags:
+      - v1-cli
+      summary: Cli Delete Invite
+      description: 'Delete/revoke a pending invite by email.
+
+
+        Body:
+
+        email: Email address of the invite to delete'
+      operationId: cli_delete_invite_v1_cli_invites_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/cli/members:
+    get:
+      tags:
+      - v1-cli
+      summary: Cli List Members
+      description: 'List organization members.
+
+
+        Uses API key auth to determine org_id.
+
+
+        Returns:
+
+        members: List of members with email, role, joined_at'
+      operationId: cli_list_members_v1_cli_members_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    delete:
+      tags:
+      - v1-cli
+      summary: Cli Remove Member
+      description: 'Remove a member from the organization by email.
+
+
+        Uses API key auth to determine org_id.
+
+        Requires orgs.share permission.
+
+
+        Body:
+
+        email: Email of member to remove
+
+
+        Returns:
+
+        success, email'
+      operationId: cli_remove_member_v1_cli_members_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/cli/members/role:
+    patch:
+      tags:
+      - v1-cli
+      summary: Cli Update Member Role
+      description: 'Update a member''s role by email.
+
+
+        Uses API key auth to determine org_id.
+
+        Requires orgs.share permission.
+
+
+        Body:
+
+        email: Email of member to update
+
+        role: New role (owner/admin/member/viewer)
+
+
+        Returns:
+
+        success, email, new_role'
+      operationId: cli_update_member_role_v1_cli_members_role_patch
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    CLIAuthSelectOrgRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        org_id:
+          type: string
+          title: Org Id
+      type: object
+      required:
+      - session_id
+      - org_id
+      title: CLIAuthSelectOrgRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

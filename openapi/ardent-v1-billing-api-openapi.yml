@@ -1,0 +1,214 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Billing API
+  version: 0.1.0
+tags:
+- name: v1-billing
+paths:
+  /v1/orgs/{org_id}/billing/subscriptions:
+    post:
+      tags:
+      - v1-billing
+      summary: Create Subscription Endpoint
+      description: 'Create a self-serve subscription via Autumn (Stripe Checkout when needed).
+
+
+        Owner-only. Allowed plans are limited to SELF_SERVE_PLAN_IDS.'
+      operationId: create_subscription_endpoint_v1_orgs__org_id__billing_subscriptions_post
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Org Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/orgs/{org_id}/billing/subscription:
+    get:
+      tags:
+      - v1-billing
+      summary: Get Subscription Endpoint
+      description: Return current subscription status for the org.
+      operationId: get_subscription_endpoint_v1_orgs__org_id__billing_subscription_get
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Org Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - v1-billing
+      summary: Delete Subscription Endpoint
+      description: 'Cancel the org''s subscription.
+
+
+        - immediate=false (default): cancel at period end
+
+        - immediate=true: cancel now'
+      operationId: delete_subscription_endpoint_v1_orgs__org_id__billing_subscription_delete
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Org Id
+      - name: immediate
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Immediate
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/orgs/{org_id}/billing/subscriptions:update:
+    post:
+      tags:
+      - v1-billing
+      summary: Update Subscription Endpoint
+      description: 'Update an org''s subscription: upgrade/downgrade or cancel.
+
+
+        - If `plan_id` is provided, changes the plan.
+
+        - If `cancel_now` is true, cancels immediately.
+
+        - If `cancel_at_period_end` is true, schedules cancel at period end.'
+      operationId: update_subscription_endpoint_v1_orgs__org_id__billing_subscriptions_update_post
+      parameters:
+      - name: org_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Org Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    UpdateSubscriptionRequest:
+      properties:
+        plan_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Plan Id
+        cancel_at_period_end:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Cancel At Period End
+        cancel_now:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Cancel Now
+      type: object
+      title: UpdateSubscriptionRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AttachRequest:
+      properties:
+        plan_id:
+          type: string
+          title: Plan Id
+        success_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Success Url
+      type: object
+      required:
+      - plan_id
+      title: AttachRequest

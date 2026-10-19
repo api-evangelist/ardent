@@ -1,0 +1,27 @@
+openapi: 3.2.0
+info:
+  title: Fast Health API
+  version: 0.1.0
+tags:
+- name: Health
+paths:
+  /health:
+    get:
+      summary: Health Check
+      description: 'Backward-compatible alias to /readyz.
+
+
+        The ALB target group health check (`alb.ingress.kubernetes.io/healthcheck-path`)
+
+        and the deploy workflow''s public health check call this path. New consumers should
+
+        address /healthz for liveness or /readyz for readiness explicitly.'
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health

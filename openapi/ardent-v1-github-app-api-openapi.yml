@@ -1,0 +1,260 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Github App API
+  version: 0.1.0
+tags:
+- name: v1-github-app
+paths:
+  /v1/github-app/status:
+    get:
+      tags:
+      - v1-github-app
+      summary: Get Github App Status
+      description: 'Check if the current user has GitHub App installed.
+
+
+        Returns installation status and summary.'
+      operationId: get_github_app_status_v1_github_app_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstallationStatusResponse'
+  /v1/github-app/installations:
+    get:
+      tags:
+      - v1-github-app
+      summary: List Installations
+      description: List all active GitHub App installations for the current user.
+      operationId: list_installations_v1_github_app_installations_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListInstallationsResponse'
+    post:
+      tags:
+      - v1-github-app
+      summary: Register Installation
+      description: 'Register a new GitHub App installation.
+
+
+        Called by frontend after user completes installation on GitHub.
+
+        Fetches installation details from GitHub API and stores in database.'
+      operationId: register_installation_v1_github_app_installations_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterInstallationRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterInstallationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/github-app/repos:
+    get:
+      tags:
+      - v1-github-app
+      summary: List Repos
+      description: 'List all repositories accessible via user''s GitHub App installations.
+
+
+        Fetches repos from GitHub API for each active installation.'
+      operationId: list_repos_v1_github_app_repos_get
+      parameters:
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 30
+          title: Per Page
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListReposResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/github-app/webhook:
+    post:
+      tags:
+      - v1-github-app
+      summary: Handle Webhook
+      description: 'Handle GitHub App webhook events.
+
+
+        Events:
+
+        - installation: created, deleted, suspend, unsuspend
+
+        - installation_repositories: added, removed
+
+
+        Security: Webhook signature is ALWAYS verified. If GITHUB_APP_WEBHOOK_SECRET
+
+        is not configured, all requests are rejected.'
+      operationId: handle_webhook_v1_github_app_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Handle Webhook V1 Github App Webhook Post
+components:
+  schemas:
+    ListReposResponse:
+      properties:
+        repos:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Repos
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - repos
+      - count
+      title: ListReposResponse
+      description: Response for GET /v1/github-app/repos.
+    ListInstallationsResponse:
+      properties:
+        installations:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Installations
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - installations
+      - count
+      title: ListInstallationsResponse
+      description: Response for GET /v1/github-app/installations.
+    InstallationStatusResponse:
+      properties:
+        has_installation:
+          type: boolean
+          title: Has Installation
+        total_count:
+          type: integer
+          title: Total Count
+        installations:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Installations
+      type: object
+      required:
+      - has_installation
+      - total_count
+      - installations
+      title: InstallationStatusResponse
+      description: Response for GET /v1/github-app/status.
+    RegisterInstallationResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        installation_id:
+          type: integer
+          title: Installation Id
+        github_account_login:
+          type: string
+          title: Github Account Login
+        repository_selection:
+          type: string
+          title: Repository Selection
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - installation_id
+      - github_account_login
+      - repository_selection
+      - message
+      title: RegisterInstallationResponse
+      description: Response for POST /v1/github-app/installations.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RegisterInstallationRequest:
+      properties:
+        installation_id:
+          type: integer
+          title: Installation Id
+        setup_action:
+          type: string
+          title: Setup Action
+          default: install
+      type: object
+      required:
+      - installation_id
+      title: RegisterInstallationRequest
+      description: Request body for POST /v1/github-app/installations.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

@@ -1,36 +1,63 @@
 {
   "provider": "ardent",
   "sources": [
-    "_original/ardent-openapi-original.json"
+    "_original/ardent-openapi.json"
   ],
   "outputs": [
+    "ardent-fastapi-api-openapi.yml",
+    "ardent-health-api-openapi.yml",
+    "ardent-healthz-api-openapi.yml",
+    "ardent-readyz-api-openapi.yml",
     "ardent-v1-api-keys-api-openapi.yml",
+    "ardent-v1-auth-api-openapi.yml",
+    "ardent-v1-billing-api-openapi.yml",
     "ardent-v1-branching-api-openapi.yml",
+    "ardent-v1-cli-api-openapi.yml",
     "ardent-v1-connectors-api-openapi.yml",
+    "ardent-v1-environments-api-openapi.yml",
+    "ardent-v1-github-api-openapi.yml",
+    "ardent-v1-github-app-api-openapi.yml",
+    "ardent-v1-internal-api-openapi.yml",
+    "ardent-v1-internal-health-api-openapi.yml",
     "ardent-v1-operations-api-openapi.yml",
     "ardent-v1-orgs-api-openapi.yml",
-    "ardent-v1-projects-api-openapi.yml"
+    "ardent-v1-policies-api-openapi.yml",
+    "ardent-v1-posthog-api-openapi.yml",
+    "ardent-v1-projects-api-openapi.yml",
+    "ardent-v1-system-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "ardent-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "ardent-openapi-original.json: declared missing tag: v1-api-keys",
-    "ardent-openapi-original.json: declared missing tag: v1-branching",
-    "ardent-openapi-original.json: declared missing tag: v1-connectors",
-    "ardent-openapi-original.json: declared missing tag: v1-operations",
-    "ardent-openapi-original.json: declared missing tag: v1-orgs",
-    "ardent-openapi-original.json: declared missing tag: v1-projects",
-    "apis.yml register: already-registered"
+    "ardent-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "ardent-openapi.json: tagged paths GET / -> FastAPI",
+    "ardent-openapi.json: tagged paths GET /healthz -> Healthz",
+    "ardent-openapi.json: tagged paths GET /readyz -> Readyz",
+    "ardent-openapi.json: tagged paths GET /health -> Health",
+    "ardent-openapi.json: declared missing tag: FastAPI",
+    "ardent-openapi.json: declared missing tag: Health",
+    "ardent-openapi.json: declared missing tag: Healthz",
+    "ardent-openapi.json: declared missing tag: Readyz",
+    "ardent-openapi.json: declared missing tag: v1-api-keys",
+    "ardent-openapi.json: declared missing tag: v1-auth",
+    "ardent-openapi.json: declared missing tag: v1-billing",
+    "ardent-openapi.json: declared missing tag: v1-branching",
+    "ardent-openapi.json: declared missing tag: v1-cli",
+    "ardent-openapi.json: declared missing tag: v1-connectors",
+    "ardent-openapi.json: declared missing tag: v1-environments",
+    "ardent-openapi.json: declared missing tag: v1-github",
+    "ardent-openapi.json: declared missing tag: v1-github-app",
+    "ardent-openapi.json: declared missing tag: v1-internal",
+    "ardent-openapi.json: declared missing tag: v1-internal-health",
+    "ardent-openapi.json: declared missing tag: v1-operations",
+    "ardent-openapi.json: declared missing tag: v1-orgs",
+    "ardent-openapi.json: declared missing tag: v1-policies",
+    "ardent-openapi.json: declared missing tag: v1-posthog",
+    "ardent-openapi.json: declared missing tag: v1-projects",
+    "ardent-openapi.json: declared missing tag: v1-system",
+    "apis.yml register: written (+15 apis, 21 total)"
   ],
-  "skipped": [
-    "ardent-v1-api-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "ardent-v1-branching-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "ardent-v1-connectors-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "ardent-v1-operations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "ardent-v1-orgs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "ardent-v1-projects-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

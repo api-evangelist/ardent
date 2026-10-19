@@ -1,0 +1,46 @@
+openapi: 3.2.0
+info:
+  title: Fast Healthz API
+  version: 0.1.0
+tags:
+- name: Healthz
+paths:
+  /healthz:
+    get:
+      summary: Healthz
+      description: 'Process liveness — wired to k8s livenessProbe.
+
+
+        Returns 200 while the Python process is alive. Has no dependency check by
+
+        design: restarting a pod can''t fix a Supabase outage, and the thrashing
+
+        only deepens an incident. See ARD-728 and `app/health.py` for context.
+
+
+        Declared `async` deliberately (ARD-2136). A sync `def` endpoint is
+
+        dispatched to Starlette''s threadpool, which is the same pool
+
+        `check_supabase_ready` occupies via `asyncio.to_thread` on every 5s
+
+        readiness probe. Liveness then queues behind dependency work it is
+
+        documented not to depend on, times out, and the pod is killed anyway —
+
+        exactly the thrashing ARD-728 set out to prevent. Answering on the event
+
+        loop removes that coupling.'
+      operationId: healthz_healthz_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+                title: Response Healthz Healthz Get
+      tags:
+      - Healthz

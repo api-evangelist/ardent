@@ -162,6 +162,156 @@ apis:
     url: https://docs.tryardent.com/api/overview
   - type: Authentication
     url: https://docs.tryardent.com/api/authentication
+- aid: ardent:ardent-fastapi-api
+  name: Ardent Fast API
+  description: The FastAPI API from Ardent — 1 operation(s) for fastapi.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - FastAPI
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-fastapi-api-openapi.yml
+- aid: ardent:ardent-health-api
+  name: Ardent Health API
+  description: The Health API from Ardent — 1 operation(s) for health.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-health-api-openapi.yml
+- aid: ardent:ardent-healthz-api
+  name: Ardent Healthz API
+  description: The Healthz API from Ardent — 1 operation(s) for healthz.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - Healthz
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-healthz-api-openapi.yml
+- aid: ardent:ardent-readyz-api
+  name: Ardent Readyz API
+  description: The Readyz API from Ardent — 1 operation(s) for readyz.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - Readyz
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-readyz-api-openapi.yml
+- aid: ardent:ardent-v1-auth-api
+  name: Ardent V1 Auth API
+  description: The v1-auth API from Ardent — 3 operation(s) for v1-auth.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-auth
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-auth-api-openapi.yml
+- aid: ardent:ardent-v1-billing-api
+  name: Ardent V1 Billing API
+  description: The v1-billing API from Ardent — 3 operation(s) for v1-billing.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-billing
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-billing-api-openapi.yml
+- aid: ardent:ardent-v1-cli-api
+  name: Ardent V1 Cli API
+  description: The v1-cli API from Ardent — 12 operation(s) for v1-cli.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-cli
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-cli-api-openapi.yml
+- aid: ardent:ardent-v1-environments-api
+  name: Ardent V1 Environments API
+  description: The v1-environments API from Ardent — 10 operation(s) for v1-environments.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-environments
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-environments-api-openapi.yml
+- aid: ardent:ardent-v1-github-api
+  name: Ardent V1 Github API
+  description: The v1-github API from Ardent — 5 operation(s) for v1-github.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-github
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-github-api-openapi.yml
+- aid: ardent:ardent-v1-github-app-api
+  name: Ardent V1 Github App API
+  description: The v1-github-app API from Ardent — 4 operation(s) for v1-github-app.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-github-app
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-github-app-api-openapi.yml
+- aid: ardent:ardent-v1-internal-api
+  name: Ardent V1 Internal API
+  description: The v1-internal API from Ardent — 19 operation(s) for v1-internal.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-internal
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-internal-api-openapi.yml
+- aid: ardent:ardent-v1-internal-health-api
+  name: Ardent V1 Internal Health API
+  description: The v1-internal-health API from Ardent — 7 operation(s) for v1-internal-health.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-internal-health
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-internal-health-api-openapi.yml
+- aid: ardent:ardent-v1-policies-api
+  name: Ardent V1 Policies API
+  description: The v1-policies API from Ardent — 5 operation(s) for v1-policies.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-policies
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-policies-api-openapi.yml
+- aid: ardent:ardent-v1-posthog-api
+  name: Ardent V1 Posthog API
+  description: The v1-posthog API from Ardent — 1 operation(s) for v1-posthog.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-posthog
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-posthog-api-openapi.yml
+- aid: ardent:ardent-v1-system-api
+  name: Ardent V1 System API
+  description: The v1-system API from Ardent — 1 operation(s) for v1-system.
+  humanURL: https://docs.tryardent.com/api/overview
+  baseURL: https://api.tryardent.com
+  tags:
+  - v1-system
+  properties:
+  - type: OpenAPI
+    url: openapi/ardent-v1-system-api-openapi.yml
 common:
 - type: Website
   url: https://www.tryardent.com/

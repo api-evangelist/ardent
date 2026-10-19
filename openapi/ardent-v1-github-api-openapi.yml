@@ -1,0 +1,333 @@
+openapi: 3.2.0
+info:
+  title: Fast V1 Github API
+  version: 0.1.0
+tags:
+- name: v1-github
+paths:
+  /v1/user/github/status:
+    get:
+      tags:
+      - v1-github
+      summary: Get Github Status
+      description: 'Check if the current user has GitHub connected.
+
+
+        Returns connection status, username, granted scopes, and whether unlink is allowed.'
+      operationId: get_github_status_v1_user_github_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitHubStatusResponse'
+  /v1/user/github/connect:
+    post:
+      tags:
+      - v1-github
+      summary: Connect Github
+      description: 'Store GitHub credentials after successful OAuth flow.
+
+
+        Called by frontend after Supabase linkIdentity() or initial OAuth login.
+
+        The access_token is received from Supabase''s session as provider_token.
+
+
+        Body:
+
+        access_token: GitHub OAuth access token (from provider_token)
+
+        scopes: List of OAuth scopes granted (e.g., [''repo'', ''user:email''])'
+      operationId: connect_github_v1_user_github_connect_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitHubConnectRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitHubConnectResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/user/github/unlink:
+    post:
+      tags:
+      - v1-github
+      summary: Unlink Github
+      description: 'Disconnect GitHub from the current user''s account.
+
+
+        Note: This removes our stored token but does NOT revoke it on GitHub''s side.
+
+        The user should also unlink in Supabase if they want full disconnection.
+
+
+        Will refuse to unlink if GitHub is the user''s only login method.'
+      operationId: unlink_github_v1_user_github_unlink_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitHubUnlinkResponse'
+  /v1/github/repos/search:
+    get:
+      tags:
+      - v1-github
+      summary: Search Repos
+      description: 'Search GitHub repositories.
+
+
+        Works without GitHub connection (public repos only, lower rate limit).
+
+        If user has GitHub connected, uses their token for higher rate limit
+
+        and to include their private repos in results.
+
+
+        Query params:
+
+        q: Search query (required)
+
+        per_page: Number of results (default 10, max 100)'
+      operationId: search_repos_v1_github_repos_search_get
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Q
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          title: Per Page
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitHubRepoSearchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/github/repos/mine:
+    get:
+      tags:
+      - v1-github
+      summary: Get My Repos
+      description: 'Get the current user''s GitHub repositories.
+
+
+        Requires GitHub connection. Returns both public and private repos
+
+        if the ''repo'' scope was granted.
+
+
+        Query params:
+
+        per_page: Number of results (default 30, max 100)'
+      operationId: get_my_repos_v1_github_repos_mine_get
+      parameters:
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 30
+          title: Per Page
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GitHubUserReposResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    GitHubUnlinkResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - message
+      title: GitHubUnlinkResponse
+      description: Response for POST /v1/user/github/unlink.
+    GitHubRepoSearchResponse:
+      properties:
+        repos:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Repos
+        count:
+          type: integer
+          title: Count
+      type: object
+      required:
+      - repos
+      - count
+      title: GitHubRepoSearchResponse
+      description: Response for GET /v1/github/repos/search.
+    GitHubStatusResponse:
+      properties:
+        connected:
+          type: boolean
+          title: Connected
+        github_username:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Github Username
+        github_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Github User Id
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        is_valid:
+          type: boolean
+          title: Is Valid
+        can_unlink:
+          type: boolean
+          title: Can Unlink
+      type: object
+      required:
+      - connected
+      - github_username
+      - github_user_id
+      - scopes
+      - is_valid
+      - can_unlink
+      title: GitHubStatusResponse
+      description: Response for GET /v1/user/github/status.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    GitHubUserReposResponse:
+      properties:
+        repos:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Repos
+        count:
+          type: integer
+          title: Count
+        github_username:
+          type: string
+          title: Github Username
+      type: object
+      required:
+      - repos
+      - count
+      - github_username
+      title: GitHubUserReposResponse
+      description: Response for GET /v1/github/repos/mine.
+    GitHubConnectResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        github_username:
+          type: string
+          title: Github Username
+        github_user_id:
+          type: string
+          title: Github User Id
+        message:
+          type: string
+          title: Message
+      type: object
+      required:
+      - success
+      - github_username
+      - github_user_id
+      - message
+      title: GitHubConnectResponse
+      description: Response for POST /v1/user/github/connect.
+    GitHubConnectRequest:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+          default: []
+      type: object
+      required:
+      - access_token
+      title: GitHubConnectRequest
+      description: Request body for POST /v1/user/github/connect.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
