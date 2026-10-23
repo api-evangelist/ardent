@@ -1074,3 +1074,9 @@ components:
       - window_end_lsn
       title: DebeziumShadowCompareRequest
       description: Request body for staff-triggered shadow compare reservation.
+x-provenance:
+  method: harvested
+  publisher: Ardent
+  source: https://api.tryardent.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
