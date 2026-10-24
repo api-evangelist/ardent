@@ -308,6 +308,8 @@ apis:
   humanURL: https://docs.tryardent.com/api/overview
   baseURL: https://api.tryardent.com
   tags:
+  - V1System
+  tags_raw:
   - v1-system
   properties:
   - type: OpenAPI
